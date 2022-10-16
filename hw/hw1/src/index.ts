@@ -76,57 +76,41 @@ app.get('/api/videos', (req: Request, res: Response) => {
 })
 
 app.post('/api/videos', (req: Request, res: Response) => {
+  const errors: any = {errorsMessages: []}
+
   const title = req.body.title
 
   if (!title || title.length < 1 || title.length > 40) {
-    res.status(400).send({
-      "errorsMessages": [
-        {
-          "message": "title length must be between 1 and 40",
-          "field": "title"
-        }
-      ]
-    })
-    return
+    errors.errorsMessages.push({"message": "title length must be between 1 and 40", "field": "title"})
   }
 
   const author = req.body.author
 
   if (!author || author.length < 1 || req.body.author.length > 20) {
-    res.status(400).send({
-      "errorsMessages": [
-        {
-          "message": "author length must be between 1 and 20",
-          "field": "author"
-        }
-      ]
-    })
-    return
+    errors.errorsMessages.push({"message": "title length must be between 1 and 40", "field": "author"})
   }
 
   const availableResolutions: string[] = req.body.availableResolutions
 
-  const resolutionsError = {
-    "errorsMessages": [
-      {
-        "message": "resolutions format mistake",
-        "field": "availableResolutions"
-      }
-    ]
-  }
   if (!Array.isArray(availableResolutions)) {
-    res.status(400).send(resolutionsError)
-    return
+    errors.errorsMessages.push({"message": "title length must be between 1 and 40", "field": "availableResolutions"})
   }
 
   if (availableResolutions.length) {
     if (!checkAvailableResolutions(availableResolutions)) {
-      res.status(400).send(resolutionsError)
-      return
+      errors.errorsMessages.push({"message": "title length must be between 1 and 40", "field": "availableResolutions"})
     }
   } else {
     availableResolutions.push('P144')
   }
+
+  if (errors.errorsMessages.length) {
+    res.status(400).send({
+      "errorsMessages": []
+    })
+    return
+  }
+
   const date = +new Date()
 
   const newVideo = {
@@ -216,6 +200,7 @@ app.put('/api/videos/:id', (req: Request, res: Response) => {
     res.status(400).send({
       "errorsMessages": []
     })
+    return
   }
   res.send(204)
 
