@@ -118,8 +118,7 @@ app.post('/api/videos', (req: Request, res: Response) => {
     canBeDownloaded: false,
     minAgeRestriction: null,
     createdAt: new Date(date).toISOString(),
-    publicationDate: 'asdasdasd',
-      // new Date(date + 86400000).toISOString(),
+    publicationDate: new Date(date + 86400000).toISOString(),
     availableResolutions
   }
   videos.push(newVideo)
@@ -193,6 +192,10 @@ app.put('/api/videos/:id', (req: Request, res: Response) => {
   const publicationDate = req.body.publicationDate
   if (minAgeRestriction !== undefined) {
     video.publicationDate = publicationDate
+  }
+const dateReg = /^(?:\d{4})-(?:\d{2})-(?:\d{2})T(?:\d{2}):(?:\d{2}):(?:\d{2}(?:\.\d*)?)(?:(?:-(?:\d{2}):(?:\d{2})|Z)?)$/
+  if(!dateReg.test(publicationDate)){
+    errors.errorsMessages.push({"message": "title length must be between 1 and 40", "field": "publicationDate"})
   }
   videos[index] = video
   if (errors.errorsMessages.length) {
