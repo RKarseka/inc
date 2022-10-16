@@ -261,7 +261,7 @@ app.delete('/api/videos/:id', (req: Request, res: Response) => {
   const videoIndex = videos.findIndex(v => v.id === id)
   if (videoIndex !== -1) {
     videos.splice(videoIndex, 1)
-    res.status(204)
+    res.send(204)
   } else {
     res.send(404)
   }
