@@ -133,7 +133,7 @@ app.post('/api/videos', (req: Request, res: Response) => {
     id: +(new Date()),
     title,
     author,
-    canBeDownloaded: true,
+    canBeDownloaded: false,
     minAgeRestriction: null,
     createdAt: new Date(date).toISOString(),
     publicationDate: new Date(date + 86400000).toISOString(),
