@@ -154,6 +154,7 @@ app.get('/api/videos/:id', (req: Request, res: Response) => {
 })
 
 app.put('/api/videos/:id', (req: Request, res: Response) => {
+  const errors: any = {errorsMessages: []}
   const id = +req.params.id
   const index = videos.findIndex(v => v.id === id)
   if (index === -1) {
@@ -165,15 +166,7 @@ app.put('/api/videos/:id', (req: Request, res: Response) => {
   const title = req.body.title
 
   if (!title || title.length < 1 || title.length > 40) {
-    res.status(400).send({
-      "errorsMessages": [
-        {
-          "message": "title length must be between 1 and 40",
-          "field": "title"
-        }
-      ]
-    })
-    return
+    errors.errorsMessages.push({"message": "title length must be between 1 and 40", "field": "title"})
   }
 
   video.title = title
@@ -181,15 +174,7 @@ app.put('/api/videos/:id', (req: Request, res: Response) => {
   const author = req.body.author
 
   if (!author || author.length < 1 || req.body.author.length > 20) {
-    res.status(400).send({
-      "errorsMessages": [
-        {
-          "message": "author length must be between 1 and 20",
-          "field": "author"
-        }
-      ]
-    })
-    return
+    errors.errorsMessages.push({"message": "title length must be between 1 and 40", "field": "author"})
   }
 
   video.author = author
@@ -200,15 +185,7 @@ app.put('/api/videos/:id', (req: Request, res: Response) => {
     if (Array.isArray(availableResolutions) && checkAvailableResolutions(availableResolutions)) {
       video.availableResolutions = availableResolutions
     } else {
-      res.status(400).send({
-        "errorsMessages": [
-          {
-            "message": "resolutions format mistake",
-            "field": "availableResolutions"
-          }
-        ]
-      })
-      return
+      errors.errorsMessages.push({"message": "title length must be between 1 and 40", "field": "availableResolutions"})
     }
   }
 
@@ -217,15 +194,7 @@ app.put('/api/videos/:id', (req: Request, res: Response) => {
     if (typeof canBeDownloaded == "boolean") {
       video.canBeDownloaded = canBeDownloaded
     } else {
-      res.status(400).send({
-        "errorsMessages": [
-          {
-            "message": "canBeDownloaded format mistake",
-            "field": "canBeDownloaded"
-          }
-        ]
-      })
-      return
+      errors.errorsMessages.push({"message": "title length must be between 1 and 40", "field": "canBeDownloaded"})
     }
   }
 
@@ -234,15 +203,7 @@ app.put('/api/videos/:id', (req: Request, res: Response) => {
     if (minAgeRestriction === null || (Number.isInteger(minAgeRestriction) && minAgeRestriction > 1 && minAgeRestriction < 18)) {
       video.minAgeRestriction = minAgeRestriction
     } else {
-      res.status(400).send({
-        "errorsMessages": [
-          {
-            "message": "minAgeRestriction format mistake",
-            "field": "minAgeRestriction"
-          }
-        ]
-      })
-      return
+      errors.errorsMessages.push({"message": "title length must be between 1 and 40", "field": "minAgeRestriction"})
     }
   }
 
@@ -251,7 +212,11 @@ app.put('/api/videos/:id', (req: Request, res: Response) => {
     video.publicationDate = publicationDate
   }
   videos[index] = video
-
+  if (errors.errorsMessages.length) {
+    res.status(400).send({
+      "errorsMessages": []
+    })
+  }
   res.send(204)
 
 })
