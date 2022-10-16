@@ -66,16 +66,16 @@ app.use(bodyParser.urlencoded({
 
 app.use(bodyParser.json())
 
-app.delete('/ht_01/api/testing/all-data', (req: Request, res: Response) => {
+app.delete('/api/testing/all-data', (req: Request, res: Response) => {
   videos.length = 0
   res.sendStatus(204)
 })
 
-app.get('/hometask_01/api/videos', (req: Request, res: Response) => {
+app.get('/api/videos', (req: Request, res: Response) => {
   res.send(videos)
 })
 
-app.post('/hometask_01/api/videos', (req: Request, res: Response) => {
+app.post('/api/videos', (req: Request, res: Response) => {
   const title = req.body.title
 
   if (!title || title.length < 1 || title.length > 40) {
@@ -142,7 +142,7 @@ app.post('/hometask_01/api/videos', (req: Request, res: Response) => {
   res.status(201).send(newVideo)
 })
 
-app.get('/hometask_01/api/videos/:id', (req: Request, res: Response) => {
+app.get('/api/videos/:id', (req: Request, res: Response) => {
   const id = +req.params.id
   const video = videos.find(v => v.id === id)
   if (video) {
@@ -152,7 +152,7 @@ app.get('/hometask_01/api/videos/:id', (req: Request, res: Response) => {
   }
 })
 
-app.put('/hometask_01/api/videos/:id', (req: Request, res: Response) => {
+app.put('/api/videos/:id', (req: Request, res: Response) => {
   const id = +req.params.id
   const index = videos.findIndex(v => v.id === id)
   if (index === -1) {
@@ -255,7 +255,7 @@ app.put('/hometask_01/api/videos/:id', (req: Request, res: Response) => {
 
 })
 
-app.delete('/hometask_01/api/videos/:id', (req: Request, res: Response) => {
+app.delete('/api/videos/:id', (req: Request, res: Response) => {
   const id = +req.params.id
   const videoIndex = videos.findIndex(v => v.id === id)
   if (videoIndex !== -1) {
