@@ -105,9 +105,7 @@ app.post('/api/videos', (req: Request, res: Response) => {
   }
 
   if (errors.errorsMessages.length) {
-    res.status(400).send({
-      "errorsMessages": []
-    })
+    res.status(400).send(errors)
     return
   }
 
@@ -197,9 +195,7 @@ app.put('/api/videos/:id', (req: Request, res: Response) => {
   }
   videos[index] = video
   if (errors.errorsMessages.length) {
-    res.status(400).send({
-      "errorsMessages": []
-    })
+    res.status(400).send(errors)
     return
   }
   res.send(204)
