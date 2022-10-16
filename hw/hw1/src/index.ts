@@ -157,7 +157,7 @@ app.put('/api/videos/:id', (req: Request, res: Response) => {
   const id = +req.params.id
   const index = videos.findIndex(v => v.id === id)
   if (index === -1) {
-    res.send(401)
+    res.send(404)
     return
   }
   const video = videos[index]
