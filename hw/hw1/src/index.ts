@@ -127,15 +127,16 @@ app.post('/api/videos', (req: Request, res: Response) => {
   } else {
     availableResolutions.push('P144')
   }
-const date = new Date().toISOString()
+  const date = +new Date()
+
   const newVideo = {
     id: +(new Date()),
     title,
     author,
     canBeDownloaded: true,
     minAgeRestriction: null,
-    createdAt: date,
-    publicationDate: date,
+    createdAt: new Date(date).toISOString(),
+    publicationDate: new Date(date + 86400000).toISOString(),
     availableResolutions
   }
   videos.push(newVideo)
