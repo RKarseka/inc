@@ -118,7 +118,9 @@ app.post('/api/videos', (req: Request, res: Response) => {
     canBeDownloaded: false,
     minAgeRestriction: null,
     createdAt: new Date(date).toISOString(),
-    publicationDate: new Date(date + 86400000).toISOString(),
+    publicationDate: new Date(date
+      // + 86400000
+    ).toISOString(),
     availableResolutions
   }
   videos.push(newVideo)
