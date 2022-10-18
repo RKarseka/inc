@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Request</title>
+</head>
+<body>
+<input id='url' value="http://localhost:5000/books" style="width: 300px"/>
+<button id='load'>Load Books</button>
+<script>
+    load.onclick = () => {
+        fetch(url.value).then(res => res.json()).then(res => alert(JSON.stringify(res, null, 4))).catch(error => alert(error))
+    }
+</script>
+</body>
+</html>
