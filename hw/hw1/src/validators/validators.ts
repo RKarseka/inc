@@ -15,6 +15,7 @@ export const vCEBlog = checkSchema({
   },
   websiteUrl: {
     trim: {},
+    isLength: {options: { max: 100}},
     matches: {options: websiteUrlRegex}
   },
   Authorization
