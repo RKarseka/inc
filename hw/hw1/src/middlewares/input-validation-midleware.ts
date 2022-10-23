@@ -12,7 +12,7 @@ export const inputValidationMiddleware = (req: Request, res: Response, next: Nex
 
 export const authValidationMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const errors = validationResult(req)
-  if (!!errors.mapped()?.Authorization) {
+  if (!!errors.mapped()?.Authorization || !!errors.mapped()?.authorization) {
     return res.send(401)
   }
   next()
