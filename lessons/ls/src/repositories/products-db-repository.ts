@@ -1,4 +1,4 @@
-import { productsCollection, ProductType } from "./db";
+import { productsCollection, ProductType } from "./db"
 
 export const productsRepository = {
   async getProductById(id: number): Promise<ProductType | null> {
@@ -11,11 +11,7 @@ export const productsRepository = {
     }
     return productsCollection.find(filter).toArray()
   },
-  async createProduct(title: string): Promise<ProductType> {
-    const newProduct = {
-      id: +(new Date()),
-      title
-    }
+  async createProduct(newProduct: ProductType): Promise<ProductType> {
     await productsCollection.insertOne(newProduct)
     return newProduct
   },
