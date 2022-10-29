@@ -50,8 +50,7 @@ export const state = {
       "content": "string",
       "blogId": "string",
       "blogName": "string",
-      "createdAt": "2023-03-16T20:01:24.247Z",
-      "isMembership": true
+      "createdAt": "2023-03-16T20:01:24.247Z"
     },
     {
       "id": "string",
@@ -60,8 +59,7 @@ export const state = {
       "content": "string",
       "blogId": "string",
       "blogName": "string",
-      "createdAt": "2023-03-16T20:01:24.247Z",
-      "isMembership": true
+      "createdAt": "2023-03-16T20:01:24.247Z"
     }
   ]
 }

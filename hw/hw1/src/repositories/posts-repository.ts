@@ -6,8 +6,7 @@ interface iPost {
   content: string,
   blogId: string,
   blogName: string,
-  createdAt: string,
-  isMembership: boolean
+  createdAt: string
 }
 
 const {posts} = state
@@ -19,9 +18,8 @@ export const postsRepository = {
       shortDescription,
       content,
       blogId,
-      blogName,
+      blogName: 'str',
       createdAt: new Date().toISOString(),
-      isMembership: false
     }
     posts.push(newPost)
     return newPost
