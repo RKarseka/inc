@@ -19,7 +19,7 @@ export const postsRepository = {
       shortDescription,
       content,
       blogId,
-      blogName: '',
+      blogName: ' ',
       createdAt: new Date().toISOString(),
       isMembership: false
     }
