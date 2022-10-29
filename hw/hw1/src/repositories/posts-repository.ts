@@ -5,13 +5,24 @@ interface iPost {
   shortDescription: string,
   content: string,
   blogId: string,
-  blogName: string
+  blogName: string,
+  createdAt: string,
+  isMembership: boolean
 }
 
 const {posts} = state
 export const postsRepository = {
-  create(item: iPost) {
-    const newPost = {id: +(new Date()) + '', ...item}
+  create({title, shortDescription, content, blogId}: iPost) {
+    const newPost = {
+      id: +(new Date()) + '',
+      title,
+      shortDescription,
+      content,
+      blogId,
+      blogName: '',
+      createdAt: new Date().toISOString(),
+      isMembership: false
+    }
     posts.push(newPost)
     return newPost
   },
