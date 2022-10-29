@@ -12,14 +12,14 @@ interface iPost {
 
 const {posts} = state
 export const postsRepository = {
-  create({title, shortDescription, content, blogId}: iPost) {
+  create({title, shortDescription, content, blogId, blogName}: iPost) {
     const newPost = {
       id: +(new Date()) + '',
       title,
       shortDescription,
       content,
       blogId,
-      blogName: ' ',
+      blogName,
       createdAt: new Date().toISOString(),
       isMembership: false
     }
