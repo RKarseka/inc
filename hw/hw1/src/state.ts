@@ -29,13 +29,17 @@ export const state = {
       "id": "01",
       "name": "string",
       "description": "string",
-      "websiteUrl": "string"
+      "websiteUrl": "string",
+      "createdAt": "2023-03-16T20:01:24.247Z",
+      "isMembership": true
     },
     {
       "id": "string2",
       "name": "string",
       "description": "string",
-      "websiteUrl": "string"
+      "websiteUrl": "string",
+      "createdAt": "2023-03-16T20:01:24.247Z",
+      "isMembership": true
     }
   ],
   posts: [
