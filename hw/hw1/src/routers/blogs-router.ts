@@ -50,11 +50,11 @@ blogsRouter.get('/:blogId/posts', async (req: Request, res: Response) => {
   const posts = await postsRepository.getAll(query)
   res.send(posts)
 })
-blogsRouter.post('/:id/posts', vCEPost, authValidationMiddleware, inputValidationMiddleware,
+blogsRouter.post('/:blogId/posts', vCEPost, authValidationMiddleware, inputValidationMiddleware,
   async (req: Request, res: Response) => {
-    const blog = await blogsRepository.getOne(req.params.id)
+    const blog = await blogsRepository.getOne(req.params.blogId)
     if (!blog) {
       return res.send(404)
     }
-    res.status(201).send(await postsRepository.create({...req.body, blogId: req.params.id, blogName: 'string'}))
+    res.status(201).send(await postsRepository.create({...req.body, blogId: req.params.blogId, blogName: 'string'}))
   })
