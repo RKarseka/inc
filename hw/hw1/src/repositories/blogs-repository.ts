@@ -25,6 +25,9 @@ export const blogsRepository = {
     //*todo #any
     const sort: any = {}
     sort[sortBy] = sortDirection === 'asc' ? 1 : -1
+    if(!sort.createdAt){
+      sort.createdAt = sortDirection === 'asc' ? 1 : -1
+    }
     const skip = (pageNumber - 1) * pageSize
     //*todo #any
     const filter: any = {}
