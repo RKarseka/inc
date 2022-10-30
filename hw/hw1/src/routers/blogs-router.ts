@@ -45,5 +45,5 @@ blogsRouter.get('/:id/posts', async (req: Request, res: Response) => {
 })
 blogsRouter.post('/:id/posts', vCEPost, authValidationMiddleware, inputValidationMiddleware,
   async (req: Request, res: Response) => {
-    res.status(201).send(await postsRepository.create({...req.body, "blogName": "string"}))
+    res.status(201).send(await postsRepository.create({...req.body, blogId: req.params.id, blogName: 'string'}))
   })
