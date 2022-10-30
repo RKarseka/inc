@@ -1,6 +1,6 @@
-import { state } from "../state";
-import { blogsCollection, postsCollection } from "./db";
-import { IBlog } from "./blogs-repository";
+import { state } from "../state"
+import { postsCollection } from "./db"
+
 
 export interface IPost {
   id: string,
@@ -76,7 +76,7 @@ export const postsRepository = {
   },
 
   async getOne(id: string) {
-    return await blogsCollection.findOne({id}, {projection: {_id: 0}})
+    return await postsCollection.findOne({id}, {projection: {_id: 0}})
 
   },
   async editOne(id: string, newBlog: IPost): Promise<boolean> {

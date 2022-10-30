@@ -3,6 +3,7 @@ import { vCEBlog, vCEPost, vCEPostInBlogs } from "../validators/validators";
 import { authValidationMiddleware, inputValidationMiddleware } from "../middlewares/input-validation-midleware";
 import { blogsRepository } from "../repositories/blogs-repository";
 import { postsRepository } from "../repositories/posts-repository";
+import { blogsCollection } from "../repositories/db";
 
 export const blogsRouter = Router({})
 blogsRouter.get('/', async (req: Request, res: Response) => {
@@ -45,5 +46,9 @@ blogsRouter.get('/:id/posts', async (req: Request, res: Response) => {
 })
 blogsRouter.post('/:id/posts', vCEPostInBlogs, authValidationMiddleware, inputValidationMiddleware,
   async (req: Request, res: Response) => {
+    const blog = await blogsRepository.getOne(req.params.id)
+    if (!blog) {
+      return res.send(404)
+    }
     res.status(201).send(await postsRepository.create({...req.body, blogId: req.params.id, blogName: 'string'}))
   })
