@@ -41,12 +41,14 @@ blogsRouter.get('/:id/posts', async (req: Request, res: Response) => {
     sortDirection: req.query.sortDirection?.toString() || 'desc',
     pageNumber: +(req.query.pageNumber || 1),
     pageSize: +(req.query.pageSize || 10),
+    id: req.params.id
   }
   res.send(await postsRepository.getAll(query))
 })
 blogsRouter.post('/:id/posts', vCEPostInBlogs, authValidationMiddleware, inputValidationMiddleware,
   async (req: Request, res: Response) => {
     const blog = await blogsRepository.getOne(req.params.id)
+    console.log('const blog = ', blog)
     if (!blog) {
       return res.send(404)
     }

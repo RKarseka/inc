@@ -13,15 +13,15 @@ export interface IPost {
 }
 
 interface getParams {
+  id?: string,
   sortBy: string,
   sortDirection: string,
   pageNumber: number,
   pageSize: number
 }
 
-const {posts} = state
 export const postsRepository = {
-  async getAll({sortBy, sortDirection, pageNumber, pageSize}: getParams) {
+  async getAll({sortBy, sortDirection, pageNumber, pageSize, id}: getParams) {
     const sorts = [ 'createdAt' ]
 
     //*todo #any
@@ -33,6 +33,9 @@ export const postsRepository = {
 
     //*todo #any
     const filter: any = {}
+    if (id) {
+      filter.id = id
+    }
 
     const itemsFull = await postsCollection.countDocuments(filter)
 
