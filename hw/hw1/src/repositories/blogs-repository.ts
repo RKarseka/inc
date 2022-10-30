@@ -38,6 +38,7 @@ export const blogsRepository = {
     const items =
       await blogsCollection
         .find(filter)
+        .project({_id: 0})
         .sort(sort)
         .limit(pageSize)
         .skip(skip)

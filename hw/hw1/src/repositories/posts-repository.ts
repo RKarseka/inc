@@ -39,6 +39,7 @@ export const postsRepository = {
     const items =
       await postsCollection
         .find(filter)
+        .project({_id: 0})
         .sort(sort)
         .limit(pageSize)
         .skip(skip)
