@@ -22,13 +22,10 @@ interface getParams {
 
 export const postsRepository = {
   async getAll({sortBy, sortDirection, pageNumber, pageSize, id}: getParams) {
-    const sorts = [ 'createdAt' ]
 
     //*todo #any
     const sort: any = {}
-    if (sorts.includes(sortBy)) {
-      sort[sortBy] = sortDirection === 'asc' ? 1 : -1
-    }
+    sort[sortBy] = sortDirection === 'asc' ? 1 : -1
     const skip = (pageNumber - 1) * pageSize
 
     //*todo #any
