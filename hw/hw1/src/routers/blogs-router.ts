@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express"
-import { vCEBlog, vCEPost } from "../validators/validators";
+import { vCEBlog, vCEPost, vCEPostInBlogs } from "../validators/validators";
 import { authValidationMiddleware, inputValidationMiddleware } from "../middlewares/input-validation-midleware";
 import { blogsRepository } from "../repositories/blogs-repository";
 import { postsRepository } from "../repositories/posts-repository";
@@ -43,7 +43,7 @@ blogsRouter.get('/:id/posts', async (req: Request, res: Response) => {
   }
   res.send(await postsRepository.getAll(query))
 })
-blogsRouter.post('/:id/posts', vCEPost, authValidationMiddleware, inputValidationMiddleware,
+blogsRouter.post('/:id/posts', vCEPostInBlogs, authValidationMiddleware, inputValidationMiddleware,
   async (req: Request, res: Response) => {
     res.status(201).send(await postsRepository.create({...req.body, blogId: req.params.id, blogName: 'string'}))
   })

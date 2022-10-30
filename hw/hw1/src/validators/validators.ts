@@ -20,7 +20,7 @@ export const vCEBlog = checkSchema({
   },
   Authorization
 })
-export const vCEPost = checkSchema({
+const vPost = {
   title: {
     trim: {},
     isLength: {options: {min: 1, max: 30}}
@@ -33,6 +33,11 @@ export const vCEPost = checkSchema({
     trim: {},
     isLength: {options: {min: 1, max: 1000}}
   },
+  Authorization
+}
+export const vCEPostInBlogs = checkSchema(vPost)
+export const vCEPost = checkSchema({
+  ...vPost,
   blogId: {
     trim: {},
     isLength: {options: {min: 1, max: 1000}},
@@ -41,6 +46,5 @@ export const vCEPost = checkSchema({
         return !!await blogsRepository.getOne(id)
       }
     }
-  },
-  Authorization
+  }
 })
