@@ -34,7 +34,7 @@ export const blogsRepository = {
     if (searchNameTerm) {
       filter.name = {$regex: searchNameTerm}
     }
-    const itemsFull = await blogsCollection.countDocuments(filter)
+    const totalCount = await blogsCollection.countDocuments(filter)
     const items =
       await blogsCollection
         .find(filter)
@@ -45,9 +45,9 @@ export const blogsRepository = {
         .toArray()
 
     return {
-      pagesCount: Math.ceil(itemsFull / pageSize),
+      pagesCount: Math.ceil(totalCount / pageSize),
       page: pageNumber,
-      itemsFull,
+      totalCount,
       pageSize,
       items
     }

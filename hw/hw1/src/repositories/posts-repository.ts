@@ -37,7 +37,7 @@ export const postsRepository = {
       filter.id = id
     }
 
-    const itemsFull = await postsCollection.countDocuments(filter)
+    const totalCount = await postsCollection.countDocuments(filter)
 
     const items =
       await postsCollection
@@ -49,9 +49,9 @@ export const postsRepository = {
         .toArray()
 
     return {
-      pagesCount: Math.ceil(itemsFull / pageSize),
+      pagesCount: Math.ceil(totalCount / pageSize),
       page: pageNumber,
-      itemsFull,
+      totalCount,
       pageSize,
       items
     }
