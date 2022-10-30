@@ -27,7 +27,9 @@ export const postsRepository = {
     const sort: any = {}
     sort[sortBy] = sortDirection === 'asc' ? 1 : -1
     const skip = (pageNumber - 1) * pageSize
-
+    if(!sort.createdAt){
+      sort.createdAt = sortDirection === 'asc' ? 1 : -1
+    }
     //*todo #any
     const filter: any = {}
     if (id) {
