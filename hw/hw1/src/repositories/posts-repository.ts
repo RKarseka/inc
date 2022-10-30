@@ -1,6 +1,8 @@
 import { state } from "../state";
+import { blogsCollection, postsCollection } from "./db";
+import { IBlog } from "./blogs-repository";
 
-interface iPost {
+export interface IPost {
   title: string,
   shortDescription: string,
   content: string,
@@ -9,9 +11,47 @@ interface iPost {
   createdAt: string
 }
 
+interface getParams {
+  sortBy: string,
+  sortDirection: string,
+  pageNumber: number,
+  pageSize: number
+}
+
 const {posts} = state
 export const postsRepository = {
-  create({title, shortDescription, content, blogId, blogName}: iPost) {
+  async getAll({sortBy, sortDirection, pageNumber, pageSize}: getParams) {
+    const sorts = [ 'createdAt' ]
+
+    //*todo #any
+    const sort: any = {}
+    if (sorts.includes(sortBy)) {
+      sort[sortBy] = sortDirection === 'asc' ? 1 : -1
+    }
+    const skip = (pageNumber - 1) * pageSize
+
+    //*todo #any
+    const filter: any = {}
+
+    const itemsFull = await postsCollection.countDocuments(filter)
+
+    const items =
+      await postsCollection
+        .find(filter)
+        .sort(sort)
+        .limit(pageSize)
+        .skip(skip)
+        .toArray()
+
+    return {
+      pagesCount: Math.ceil(itemsFull / pageSize),
+      page: pageNumber,
+      itemsFull,
+      pageSize,
+      items
+    }
+  },
+  async create({title, shortDescription, content, blogId}: IPost): Promise<IPost> {
     const newPost = {
       id: +(new Date()) + '',
       title,
@@ -21,25 +61,19 @@ export const postsRepository = {
       blogName: 'str',
       createdAt: new Date().toISOString(),
     }
-    posts.push(newPost)
+    await postsCollection.insertOne(newPost)
     return newPost
   },
-  getAll() {
-    return posts
+
+  async getOne(id: string) {
+    return await blogsCollection.findOne({id})
   },
-  getOne(id: string) {
-    return posts.find(i => i.id === id)
+  async editOne(id: string, newBlog: IPost): Promise<boolean> {
+    const result = await postsCollection.updateOne({id}, {$set: newBlog})
+    return !!result.matchedCount
   },
-  editOne(id: string, newBlog: iPost) {
-    const blog = this.getOne(id)
-    if (!blog) {
-      return false
-    }
-    Object.assign(blog, newBlog)
-    return true
-  },
-  deleteOne(id: string) {
-    const index = posts.findIndex(p => p.id === id)
-    return index !== -1 && !!posts.splice(index, 1)
+  async deleteOne(id: string): Promise<boolean> {
+    const result = await postsCollection.deleteOne({id})
+    return !!result.deletedCount
   }
 }

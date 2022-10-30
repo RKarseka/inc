@@ -1,15 +1,15 @@
 import { productsCollection, ProductType } from "./db"
 
 export const productsRepository = {
-  async getProductById(id: number): Promise<ProductType | null> {
-    return await productsCollection.findOne({id})
-  },
   async findProducts(title: string | undefined): Promise<ProductType[]> {
     const filter: any = {}
     if (title) {
       filter.title = {$regex: title}
     }
     return productsCollection.find(filter).toArray()
+  },
+  async getProductById(id: number): Promise<ProductType | null> {
+    return await productsCollection.findOne({id})
   },
   async createProduct(newProduct: ProductType): Promise<ProductType> {
     await productsCollection.insertOne(newProduct)

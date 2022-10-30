@@ -4,26 +4,32 @@ import { authValidationMiddleware, inputValidationMiddleware } from "../middlewa
 import { vCEPost } from "../validators/validators";
 
 export const postsRouter = Router({})
-postsRouter.get('/', (req: Request, res: Response) => {
-  res.send(postsRepository.getAll())
+postsRouter.get('/', async (req: Request, res: Response) => {
+  const query = {
+    sortBy: req.query.sortBy?.toString() || 'createdAt',
+    sortDirection: req.query.sortDirection?.toString() || 'desc',
+    pageNumber: +(req.query.pageNumber || 1),
+    pageSize: +(req.query.pageSize || 10),
+  }
+  res.send(await postsRepository.getAll(query))
 })
 
 postsRouter.post('/', vCEPost, authValidationMiddleware, inputValidationMiddleware,
-  (req: Request, res: Response) => {
-    res.status(201).send(postsRepository.create({...req.body, "blogName": "string"}))
+  async (req: Request, res: Response) => {
+    res.status(201).send(await postsRepository.create({...req.body, "blogName": "string"}))
   })
 
-postsRouter.get('/:id', (req: Request, res: Response) => {
-  const product = postsRepository.getOne(req.params.id)
+postsRouter.get('/:id', async (req: Request, res: Response) => {
+  const product = await postsRepository.getOne(req.params.id)
   res.send(product || 404)
 })
 
 postsRouter.put('/:id', vCEPost, authValidationMiddleware, inputValidationMiddleware,
-  (req: Request, res: Response) => {
-    const newBlog = postsRepository.editOne(req.params.id, req.body)
+  async (req: Request, res: Response) => {
+    const newBlog = await postsRepository.editOne(req.params.id, req.body)
     res.send(newBlog ? 204 : 404)
   })
 postsRouter.delete('/:id', vCEPost, authValidationMiddleware,
-  (req: Request, res: Response) => {
-    res.send(postsRepository.deleteOne(req.params.id) ? 204 : 404)
+  async (req: Request, res: Response) => {
+    res.send(await postsRepository.deleteOne(req.params.id) ? 204 : 404)
   })

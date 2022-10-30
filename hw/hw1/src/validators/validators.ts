@@ -1,5 +1,5 @@
 import { checkSchema } from "express-validator"
-import { state } from "../state";
+import { blogsRepository } from "../repositories/blogs-repository"
 
 const creds = 'Basic YWRtaW46cXdlcnR5'
 const websiteUrlRegex = '^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$'
@@ -15,7 +15,7 @@ export const vCEBlog = checkSchema({
   },
   websiteUrl: {
     trim: {},
-    isLength: {options: { max: 100}},
+    isLength: {options: {max: 100}},
     matches: {options: websiteUrlRegex}
   },
   Authorization
@@ -37,8 +37,8 @@ export const vCEPost = checkSchema({
     trim: {},
     isLength: {options: {min: 1, max: 1000}},
     custom: {
-      options: (id) => {
-        return !!state.blogs.find(b => b.id === id)
+      options: async (id: string) => {
+        return !!await blogsRepository.getOne(id)
       }
     }
   },
