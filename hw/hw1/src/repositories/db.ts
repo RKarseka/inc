@@ -13,7 +13,7 @@ export type ProductType = {
 const mongoUri = process.env.MONGO_URI || 'mongodb://0.0.0.0:27017'
 
 const client = new MongoClient(mongoUri)
-const db = client.db('guild')
+export const db = client.db('guild')
 export const videosCollection = db.collection<ProductType>('videos')
 export const postsCollection = db.collection<IPost>('posts')
 export const blogsCollection = db.collection<IBlog>('blogs')
