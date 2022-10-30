@@ -24,13 +24,13 @@ export const blogsRepository = {
 
     //*todo #any
     const sort: any = {}
-      sort[sortBy] = sortDirection === 'asc' ? 1 : -1
+    sort[sortBy] = sortDirection === 'asc' ? 1 : -1
     const skip = (pageNumber - 1) * pageSize
     //*todo #any
     const filter: any = {}
-    // if (searchNameTerm) {
-    //   filter.name = {$regex: searchNameTerm}
-    // }
+    if (searchNameTerm) {
+      filter.name = {$regex: new RegExp(searchNameTerm, "i")}
+    }
     const totalCount = await blogsCollection.countDocuments(filter)
     const items =
       await blogsCollection
