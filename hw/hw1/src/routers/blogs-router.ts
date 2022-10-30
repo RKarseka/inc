@@ -44,7 +44,7 @@ blogsRouter.get('/:id/posts', async (req: Request, res: Response) => {
     id: req.params.id
   }
   const posts = await postsRepository.getAll(query)
-  if (!posts.itemsFull) {
+  if (!posts.totalCount) {
     return res.send(404)
   }
   res.send(posts)
