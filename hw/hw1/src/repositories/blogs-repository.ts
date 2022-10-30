@@ -28,9 +28,9 @@ export const blogsRepository = {
     const skip = (pageNumber - 1) * pageSize
     //*todo #any
     const filter: any = {}
-    if (searchNameTerm) {
-      filter.name = {$regex: searchNameTerm}
-    }
+    // if (searchNameTerm) {
+    //   filter.name = {$regex: searchNameTerm}
+    // }
     const totalCount = await blogsCollection.countDocuments(filter)
     const items =
       await blogsCollection
