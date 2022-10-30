@@ -31,7 +31,7 @@ export const postsRepository = {
     //*todo #any
     const filter: any = {}
     if (id) {
-      filter.id = id
+      filter.blogId = id
     }
 
     const totalCount = await postsCollection.countDocuments(filter)
