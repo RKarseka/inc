@@ -36,16 +36,7 @@ export const vCEPost = checkSchema({
   blogId: {
     trim: {},
     isLength: {options: {min: 1, max: 1000}},
-    custom: {
-      options: async (id: string) => {
-        if (!!(await blogsRepository.getOne(id))) {
-          return Promise.resolve()
-        } else {
-          return Promise.reject()
-        }
-      }
-
-    }
+    isMongoId: {}
   },
   Authorization
 })
