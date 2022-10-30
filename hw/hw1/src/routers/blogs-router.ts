@@ -43,7 +43,11 @@ blogsRouter.get('/:id/posts', async (req: Request, res: Response) => {
     pageSize: +(req.query.pageSize || 10),
     id: req.params.id
   }
-  res.send(await postsRepository.getAll(query))
+  const posts = await postsRepository.getAll(query)
+  if (!posts.itemsFull) {
+    return res.send(404)
+  }
+  res.send(posts)
 })
 blogsRouter.post('/:id/posts', vCEPostInBlogs, authValidationMiddleware, inputValidationMiddleware,
   async (req: Request, res: Response) => {
