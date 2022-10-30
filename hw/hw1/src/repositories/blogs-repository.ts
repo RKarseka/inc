@@ -2,6 +2,7 @@ import { state } from "../state";
 import { blogsCollection } from "./db";
 
 export interface IBlog {
+  id: string,
   name: string,
   description: string,
   websiteUrl: string,
@@ -60,7 +61,14 @@ export const blogsRepository = {
       isMembership: false
     }
     await blogsCollection.insertOne(newBlog)
-    return newBlog
+    return {
+      id: newBlog.id,
+      name: newBlog.name,
+      description: newBlog.description,
+      websiteUrl: newBlog.websiteUrl,
+      createdAt: newBlog.createdAt,
+      isMembership: newBlog.isMembership
+    }
   },
   async getOne(id: string): Promise<IBlog | null> {
     return await blogsCollection.findOne({id})
