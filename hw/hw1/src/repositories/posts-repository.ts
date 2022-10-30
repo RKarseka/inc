@@ -76,7 +76,8 @@ export const postsRepository = {
   },
 
   async getOne(id: string) {
-    return await blogsCollection.findOne({id})
+    return await blogsCollection.findOne({id}, {projection: {_id: 0}})
+
   },
   async editOne(id: string, newBlog: IPost): Promise<boolean> {
     const result = await postsCollection.updateOne({id}, {$set: newBlog})
