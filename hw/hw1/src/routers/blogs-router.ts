@@ -43,16 +43,16 @@ blogsRouter.get('/:id/posts', async (req: Request, res: Response) => {
     pageSize: +(req.query.pageSize || 10),
     id: req.params.id
   }
-  const posts = await postsRepository.getAll(query)
-  if (!posts.totalCount) {
+  const blog = await blogsRepository.getOne(req.params.id)
+  if (!blog) {
     return res.send(404)
   }
+  const posts = await postsRepository.getAll(query)
   res.send(posts)
 })
 blogsRouter.post('/:id/posts', vCEPostInBlogs, authValidationMiddleware, inputValidationMiddleware,
   async (req: Request, res: Response) => {
     const blog = await blogsRepository.getOne(req.params.id)
-    console.log('const blog = ', blog)
     if (!blog) {
       return res.send(404)
     }
