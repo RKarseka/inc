@@ -35,7 +35,6 @@ const vPost = {
   },
   Authorization
 }
-export const vCEPostInBlogs = checkSchema(vPost)
 export const vCEPost = checkSchema({
   ...vPost,
   blogId: {
