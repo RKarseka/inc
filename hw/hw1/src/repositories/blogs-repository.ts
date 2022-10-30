@@ -21,13 +21,10 @@ interface getParams {
 const {blogs} = state
 export const blogsRepository = {
   async getAll({searchNameTerm, sortBy, sortDirection, pageNumber, pageSize}: getParams) {
-    const sorts = [ 'createdAt' ]
 
     //*todo #any
     const sort: any = {}
-    if (sorts.includes(sortBy)) {
       sort[sortBy] = sortDirection === 'asc' ? 1 : -1
-    }
     const skip = (pageNumber - 1) * pageSize
     //*todo #any
     const filter: any = {}
