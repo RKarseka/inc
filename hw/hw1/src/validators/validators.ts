@@ -34,8 +34,8 @@ export const vCEPost = checkSchema({
   },
   blogId: {
     trim: {},
-    isLength: {options: {min: 25, max: 25}}
-    // isMongoId: {}
+    // isLength: {options: {min: 24, max: 26}}
+    isMongoId: {}
   },
   Authorization
 })
