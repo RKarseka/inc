@@ -11,7 +11,7 @@ export const createPost = async (req: Request, res: Response) => {
   if (!blog) {
     return res.send(404)
   }
-  res.status(201).send(await postsRepository.create({...req.body, blogId: req.params.blogId, blogName: blog.name}))
+  res.status(201).send(await postsRepository.create({...req.body, blogId: req.params.blogId || req.body.blogId, blogName: blog.name}))
 }
 postsRouter.get('/', async (req: Request, res: Response) => {
   const query = {
