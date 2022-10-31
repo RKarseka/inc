@@ -46,12 +46,12 @@ postsRouter.get('/:id', async (req: Request, res: Response) => {
   res.send(product || 404)
 })
 
-postsRouter.put('/:id', vCEPost, authValidationMiddleware, inputValidationMiddleware,
+postsRouter.put('/:id', body('blogId').isMongoId(), vCEPost, authValidationMiddleware, inputValidationMiddleware,
   async (req: Request, res: Response) => {
     const newBlog = await postsRepository.editOne(req.params.id, req.body)
     res.send(newBlog ? 204 : 404)
   })
-postsRouter.delete('/:id', body('blogId').isMongoId(), authValidationMiddleware,
+postsRouter.delete('/:id', authValidationMiddleware,
   async (req: Request, res: Response) => {
     res.send(await postsRepository.deleteOne(req.params.id) ? 204 : 404)
   })
