@@ -37,7 +37,7 @@ export const vCEPost = checkSchema({
   },
   blogId: {
     custom: {
-      options: (id: string) => ObjectId.isValid(id) && (String)(new ObjectId(id)) === id
+      options: (id: string) => ObjectId.isValid(id) && (new ObjectId(id)).toString() === id
     },
     // custom: {
     //   options: async (id: string) => {
