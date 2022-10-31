@@ -56,5 +56,5 @@ blogsRouter.post('/:blogId/posts', vCEPost, authValidationMiddleware, inputValid
     if (!blog) {
       return res.send(404)
     }
-    res.status(201).send(await postsRepository.create({...req.body, blogId: req.params.blogId, blogName: 'string'}))
+    res.status(201).send(await postsRepository.create({...req.body, blogId: req.params.blogId, blogName: blog.name}))
   })

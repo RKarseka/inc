@@ -1,6 +1,15 @@
 import { state } from "../state"
 import { postsCollection } from "./db"
+import { ObjectId } from "mongodb";
 
+
+interface getParams {
+  id?: string,
+  sortBy: string,
+  sortDirection: string,
+  pageNumber: number,
+  pageSize: number
+}
 
 export interface IPost {
   id: string,
@@ -12,13 +21,9 @@ export interface IPost {
   createdAt: string
 }
 
-interface getParams {
-  id?: string,
-  sortBy: string,
-  sortDirection: string,
-  pageNumber: number,
-  pageSize: number
-}
+const mapIPost = ({id, title, shortDescription, content, blogId, blogName, createdAt}: IPost): IPost => ({
+  id, title, shortDescription, content, blogId, blogName, createdAt
+})
 
 export const postsRepository = {
   async getAll({sortBy, sortDirection, pageNumber, pageSize, id}: getParams) {
@@ -55,30 +60,24 @@ export const postsRepository = {
       items
     }
   },
-  async create({title, shortDescription, content, blogId}: IPost): Promise<IPost> {
+  async create({title, shortDescription, content, blogId, blogName}: IPost): Promise<IPost> {
     const newPost = {
-      id: +(new Date()) + '',
+      id: new ObjectId() + '',
       title,
       shortDescription,
       content,
       blogId,
-      blogName: 'str',
+      blogName,
       createdAt: new Date().toISOString(),
     }
     await postsCollection.insertOne(newPost)
-    return {
-      id: newPost.id,
-      title: newPost.title,
-      shortDescription: newPost.shortDescription,
-      content: newPost.content,
-      blogId: newPost.blogId,
-      blogName: newPost.blogName,
-      createdAt: newPost.createdAt,
-    }
+    return newPost
   },
 
   async getOne(id: string) {
-    return await postsCollection.findOne({id}, {projection: {_id: 0}})
+    const item = await postsCollection.findOne({id})
+    return item ? mapIPost(item) : item
+
 
   },
   async editOne(id: string, newBlog: IPost): Promise<boolean> {
@@ -90,3 +89,6 @@ export const postsRepository = {
     return !!result.deletedCount
   }
 }
+
+
+
