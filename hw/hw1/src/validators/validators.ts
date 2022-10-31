@@ -4,6 +4,7 @@ import { blogsRepository } from "../repositories/blogs-repository";
 const creds = 'Basic YWRtaW46cXdlcnR5'
 const websiteUrlRegex = '^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$'
 const Authorization = {equals: {options: creds}}
+const midreg = '^[0-9a-fA-F]{24}$'
 export const vCEBlog = checkSchema({
   name: {
     trim: {},
@@ -45,10 +46,11 @@ export const vCEPost = checkSchema({
     // },
     // trim: {},
     // isLength: {options: {min: 24, max: 26}}
-    isMongoId: {}
+    matches: {options: midreg}
   },
   Authorization
 })
 // 63189b06003380064c4193be
 // 641cf608f05a7046e01a3030
 // 641cf5fff05a7046e01a2ffc
+// 641cfc4c5b72ff7c31fb339c
