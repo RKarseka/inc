@@ -28,7 +28,7 @@ postsRouter.get('/', async (req: Request, res: Response) => {
   res.send(await postsRepository.getAll(query))
 })
 
-postsRouter.post('/', vCEPost, authValidationMiddleware, inputValidationMiddleware,
+postsRouter.post('/', body('blogId').isMongoId(), vCEPost, authValidationMiddleware, inputValidationMiddleware,
   async (req: Request, res: Response) => {
     const blog = await blogsRepository.getOne(req.body.blogId)
     if (!blog) {
