@@ -5,9 +5,6 @@ const creds = 'Basic YWRtaW46cXdlcnR5'
 const websiteUrlRegex = '^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$'
 const Authorization = {equals: {options: creds}}
 export const vCEBlog = checkSchema({
-  id:{
-    isMongoId: {}
-  },
   name: {
     trim: {},
     isLength: {options: {min: 1, max: 15}}
