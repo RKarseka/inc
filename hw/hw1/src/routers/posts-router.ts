@@ -51,7 +51,7 @@ postsRouter.put('/:id', body('blogId').isMongoId(), vCEPost, authValidationMiddl
     const newBlog = await postsRepository.editOne(req.params.id, req.body)
     res.send(newBlog ? 204 : 404)
   })
-postsRouter.delete('/:id', authValidationMiddleware,
+postsRouter.delete('/:id', vCEPost, authValidationMiddleware,
   async (req: Request, res: Response) => {
     res.send(await postsRepository.deleteOne(req.params.id) ? 204 : 404)
   })
