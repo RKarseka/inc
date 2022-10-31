@@ -1,5 +1,6 @@
 import { state } from "../state";
 import { blogsCollection } from "./db";
+import { ObjectId } from "mongodb";
 
 export interface IBlog {
   id: string,
@@ -25,7 +26,7 @@ export const blogsRepository = {
     //*todo #any
     const sort: any = {}
     sort[sortBy] = sortDirection === 'asc' ? 1 : -1
-    if(!sort.createdAt){
+    if (!sort.createdAt) {
       sort.createdAt = sortDirection === 'asc' ? 1 : -1
     }
     const skip = (pageNumber - 1) * pageSize
@@ -54,7 +55,7 @@ export const blogsRepository = {
   },
   async create({name, description, websiteUrl}: IBlog): Promise<IBlog> {
     const newBlog = {
-      id: +(new Date()) + '',
+      id: new ObjectId() + '',
       name,
       description,
       websiteUrl,

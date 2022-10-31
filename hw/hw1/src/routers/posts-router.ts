@@ -27,7 +27,17 @@ postsRouter.get('/', async (req: Request, res: Response) => {
   res.send(await postsRepository.getAll(query))
 })
 
-postsRouter.post('/', vCEPost, authValidationMiddleware, inputValidationMiddleware, createPost
+postsRouter.post('/', vCEPost, authValidationMiddleware, inputValidationMiddleware,
+  async (req: Request, res: Response) => {
+    const blog = await blogsRepository.getOne(req.body.blogId)
+    if (!blog) {
+      return res.send(404)
+    }
+    res.status(201).send(await postsRepository.create({
+      ...req.body,
+      blogName: blog.name
+    }))
+  }
 )
 
 postsRouter.get('/:id', async (req: Request, res: Response) => {
