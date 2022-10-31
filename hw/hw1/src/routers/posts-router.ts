@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express"
 import { postsRepository } from "../repositories/posts-repository";
 import { authValidationMiddleware, inputValidationMiddleware } from "../middlewares/input-validation-midleware";
-import { vCEPost } from "../validators/validators";
+import { vBlogID, vCEPost } from "../validators/validators";
 import { blogsRepository } from "../repositories/blogs-repository";
 import { body } from "express-validator";
 
@@ -28,7 +28,7 @@ postsRouter.get('/', async (req: Request, res: Response) => {
   res.send(await postsRepository.getAll(query))
 })
 
-postsRouter.post('/', body('blogId').isMongoId(), vCEPost, authValidationMiddleware, inputValidationMiddleware,
+postsRouter.post('/', vBlogID, vCEPost, authValidationMiddleware, inputValidationMiddleware,
   async (req: Request, res: Response) => {
     const blog = await blogsRepository.getOne(req.body.blogId)
     if (!blog) {
@@ -46,7 +46,7 @@ postsRouter.get('/:id', async (req: Request, res: Response) => {
   res.send(product || 404)
 })
 
-postsRouter.put('/:id', body('blogId').isMongoId(), vCEPost, authValidationMiddleware, inputValidationMiddleware,
+postsRouter.put('/:id', vBlogID, vCEPost, authValidationMiddleware, inputValidationMiddleware,
   async (req: Request, res: Response) => {
     const newBlog = await postsRepository.editOne(req.params.id, req.body)
     res.send(newBlog ? 204 : 404)

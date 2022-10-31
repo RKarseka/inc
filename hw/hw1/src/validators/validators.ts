@@ -1,6 +1,7 @@
 import { checkSchema } from "express-validator"
 import { blogsRepository } from "../repositories/blogs-repository";
 import { ObjectId } from "mongodb";
+import exp from "constants";
 
 const creds = 'Basic YWRtaW46cXdlcnR5'
 const websiteUrlRegex = '^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$'
@@ -22,6 +23,21 @@ export const vCEBlog = checkSchema({
   },
   Authorization
 })
+export const vBlogID = checkSchema(
+  {
+    blogId: {
+      custom: {
+        options: async (id: string) => {
+          if (!!(await blogsRepository.getOne(id))) {
+            return Promise.resolve()
+          } else {
+            return Promise.reject()
+          }
+        }
+      }
+    }
+  }
+)
 export const vCEPost = checkSchema({
   title: {
     trim: {},
@@ -35,26 +51,5 @@ export const vCEPost = checkSchema({
     trim: {},
     isLength: {options: {min: 1, max: 1000}}
   },
-  blogId: {
-    custom: {
-      options: (id: string) => ObjectId.isValid(id) && (new ObjectId(id)).toString() === id
-    },
-    // custom: {
-    //   options: async (id: string) => {
-    //     if (!!(await blogsRepository.getOne(id))) {
-    //       return Promise.resolve()
-    //     } else {
-    //       return Promise.reject()
-    //     }
-    //   }
-    // },
-    // trim: {},
-    // isLength: {options: {min: 24, max: 26}}
-    // matches: {options: midreg}
-  },
   Authorization
 })
-// 63189b06003380064c4193be
-// 641cf608f05a7046e01a3030
-// 641cf5fff05a7046e01a2ffc
-// 641cfc4c5b72ff7c31fb339c
