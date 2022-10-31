@@ -4,6 +4,7 @@ import { authValidationMiddleware, inputValidationMiddleware } from "../middlewa
 import { blogsRepository } from "../repositories/blogs-repository";
 import { postsRepository } from "../repositories/posts-repository";
 import { blogsCollection } from "../repositories/db";
+import { createPost } from "./posts-router";
 
 export const blogsRouter = Router({})
 blogsRouter.get('/', async (req: Request, res: Response) => {
@@ -50,11 +51,4 @@ blogsRouter.get('/:blogId/posts', async (req: Request, res: Response) => {
   const posts = await postsRepository.getAll(query)
   res.send(posts)
 })
-blogsRouter.post('/:blogId/posts', vCEPost, authValidationMiddleware, inputValidationMiddleware,
-  async (req: Request, res: Response) => {
-    const blog = await blogsRepository.getOne(req.params.blogId)
-    if (!blog) {
-      return res.send(404)
-    }
-    res.status(201).send(await postsRepository.create({...req.body, blogId: req.params.blogId, blogName: blog.name}))
-  })
+blogsRouter.post('/:blogId/posts', vCEPost, authValidationMiddleware, inputValidationMiddleware, createPost)
