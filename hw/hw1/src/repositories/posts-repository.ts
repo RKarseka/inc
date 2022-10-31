@@ -71,7 +71,7 @@ export const postsRepository = {
       createdAt: new Date().toISOString(),
     }
     await postsCollection.insertOne(newPost)
-    return newPost
+    return mapIPost(newPost)
   },
 
   async getOne(id: string) {
