@@ -1,5 +1,4 @@
 import { checkSchema } from "express-validator"
-import { blogsRepository } from "../repositories/blogs-repository"
 
 const creds = 'Basic YWRtaW46cXdlcnR5'
 const websiteUrlRegex = '^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$'
@@ -35,8 +34,8 @@ export const vCEPost = checkSchema({
   },
   blogId: {
     trim: {},
-    // isLength: {options: {min: 12, max: 24}},
-    isMongoId: {}
+    isLength: {options: {min: 25, max: 25}}
+    // isMongoId: {}
   },
   Authorization
 })
