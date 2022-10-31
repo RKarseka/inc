@@ -1,5 +1,6 @@
 import { checkSchema } from "express-validator"
 import { blogsRepository } from "../repositories/blogs-repository";
+import { ObjectId } from "mongodb";
 
 const creds = 'Basic YWRtaW46cXdlcnR5'
 const websiteUrlRegex = '^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$'
@@ -35,6 +36,9 @@ export const vCEPost = checkSchema({
     isLength: {options: {min: 1, max: 1000}}
   },
   blogId: {
+    custom: {
+      options: (id: string) => ObjectId.isValid(id)
+    },
     // custom: {
     //   options: async (id: string) => {
     //     if (!!(await blogsRepository.getOne(id))) {
@@ -46,7 +50,7 @@ export const vCEPost = checkSchema({
     // },
     // trim: {},
     // isLength: {options: {min: 24, max: 26}}
-    matches: {options: midreg}
+    // matches: {options: midreg}
   },
   Authorization
 })
