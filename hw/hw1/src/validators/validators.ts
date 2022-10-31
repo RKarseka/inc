@@ -34,16 +34,15 @@ export const vCEPost = checkSchema({
     isLength: {options: {min: 1, max: 1000}}
   },
   blogId: {
-    custom: {
-      options: async (id: string) => {
-        if (!!(await blogsRepository.getOne(id))) {
-          return Promise.resolve()
-        } else {
-          return Promise.reject()
-        }
-      }
-
-    },
+    // custom: {
+    //   options: async (id: string) => {
+    //     if (!!(await blogsRepository.getOne(id))) {
+    //       return Promise.resolve()
+    //     } else {
+    //       return Promise.reject()
+    //     }
+    //   }
+    // },
     // trim: {},
     // isLength: {options: {min: 24, max: 26}}
     isMongoId: {}
