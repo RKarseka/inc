@@ -29,14 +29,26 @@ export const makeGetAllParams = <T>(params: ParsedQs, searchFields: ISearchField
     sort.createdAt = -1
   }
 
-  let filters: Filter<T> = {}
+  const filters: Filter<T> = {}
+
 
   for (const field of searchFields) {
-    const filter = {$regex: new RegExp(params[field.query]?.toString() || '', "i")}
-    if (filter) {
-      filters = {...filters, [field.name]: filter}
+    if (params[field.query]) {
+      const filter = {$regex: new RegExp(params[field.query]?.toString() || '', "i")}
+      if (filters['$or']) {
+        filters['$or'].push(filter)
+      } else {
+        filters['$or'] = [ filter ]
+      }
     }
   }
+
+  // for (const field of searchFields) {
+  //   const filter = {$regex: new RegExp(params[field.query]?.toString() || '', "i")}
+  //   if (filter) {
+  //     filters = {...filters, [field.name]: filter}
+  //   }
+  // }
   return {sort, pageNumber, pageSize, skip, filters}
 }
 
