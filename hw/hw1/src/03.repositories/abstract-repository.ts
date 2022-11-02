@@ -23,8 +23,8 @@ export const abstractRepository = {
     return {
       pagesCount: Math.ceil(totalCount / pageSize),
       page: pageNumber,
-      totalCount,
       pageSize,
+      totalCount,
       items
     }
   }
