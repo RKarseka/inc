@@ -6,7 +6,7 @@ export interface IUser {
   id: string,
   login: string,
   email: string,
-  createAt: string
+  createdAt: string
 }
 
 interface ICreateUserParams {
@@ -25,14 +25,14 @@ export const usersService = {
       login: login,
       password: password,
       email: email,
-      createAt: new Date().toISOString()
+      createdAt: new Date().toISOString()
     }
     await usersRepository.insertOne(newUser)
     return {
       id: newUser.id,
       login: newUser.login,
       email: newUser.email,
-      createAt: newUser.createAt
+      createdAt: newUser.createdAt
     }
   },
   async deleteUser(id: string) {

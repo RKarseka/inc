@@ -20,7 +20,7 @@ const mapIPost = ({id, title, shortDescription, content, blogId, blogName, creat
 
 export const postsRepository = {
   async getAll(query: IGetParams) {
-    const res:IPagedRes<IPost> = await getAllFromCollection(query, postsCollection)
+    const res: IPagedRes<IPost> = await getAllFromCollection(query, postsCollection)
     return res
   },
   async create({title, shortDescription, content, blogId, blogName}: IPost): Promise<IPost> {
