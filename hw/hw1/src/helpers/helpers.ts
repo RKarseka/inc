@@ -34,7 +34,7 @@ export const makeGetAllParams = <T>(params: ParsedQs, searchFields: ISearchField
 
   for (const field of searchFields) {
     if (params[field.query]) {
-      const filter = {$regex: new RegExp(params[field.query]?.toString() || '', "i")}
+      const filter:any = {[field.name]: {$regex: new RegExp(params[field.query]?.toString() || '', "i")}}
       if (filters['$or']) {
         filters['$or'].push(filter)
       } else {
