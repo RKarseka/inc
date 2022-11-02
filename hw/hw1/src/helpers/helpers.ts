@@ -24,7 +24,10 @@ export const makeGetAllParams = <T>(params: ParsedQs, searchFields: ISearchField
   const skip = (pageNumber - 1) * pageSize
   const sortBy = params.sortBy?.toString() || 'createdAt'
   const sortDirection = (params.sortDirection?.toString() || -1) as SortDirection
-  const sort: {[sortField: string]: SortDirection} = {[sortBy]: sortDirection, createdAt: -1}
+  const sort: {[sortField: string]: SortDirection} = {[sortBy]: sortDirection}
+  if (!sort.createdAt) {
+    sort.createdAt = -1
+  }
 
   let filters: Filter<T> = {}
 
