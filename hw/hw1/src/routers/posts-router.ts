@@ -3,7 +3,8 @@ import { postsRepository } from "../repositories/posts-repository";
 import { authValidationMiddleware, inputValidationMiddleware } from "../middlewares/input-validation-midleware";
 import { vBlogID, vCEPost } from "../validators/validators";
 import { blogsRepository } from "../repositories/blogs-repository";
-import { body } from "express-validator";
+import { SortDirection } from "mongodb";
+import { makeGetAllParams } from "../helpers/helpers";
 
 export const postsRouter = Router({})
 
@@ -19,12 +20,8 @@ export const createPost = async (req: Request, res: Response) => {
   }))
 }
 postsRouter.get('/', async (req: Request, res: Response) => {
-  const query = {
-    sortBy: req.query.sortBy?.toString() || 'createdAt',
-    sortDirection: req.query.sortDirection?.toString() || 'desc',
-    pageNumber: +(req.query.pageNumber || 1),
-    pageSize: +(req.query.pageSize || 10),
-  }
+  const searchFields = [ 'id' ]
+  const query = makeGetAllParams(req.query, searchFields)
   res.send(await postsRepository.getAll(query))
 })
 

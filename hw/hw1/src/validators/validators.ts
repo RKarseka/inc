@@ -1,12 +1,13 @@
 import { checkSchema } from "express-validator"
 import { blogsRepository } from "../repositories/blogs-repository";
-import { ObjectId } from "mongodb";
-import exp from "constants";
 
 const creds = 'Basic YWRtaW46cXdlcnR5'
 const websiteUrlRegex = '^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$'
+const loginRegex = '^[a-zA-Z0-9_-]*$'
+const emailRegex = '^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$'
 const Authorization = {equals: {options: creds}}
-const midreg = '^[0-9a-fA-F]{24}$'
+
+export const vAuth = checkSchema({Authorization})
 export const vCEBlog = checkSchema({
   name: {
     trim: {},
@@ -52,4 +53,31 @@ export const vCEPost = checkSchema({
     isLength: {options: {min: 1, max: 1000}}
   },
   Authorization
+})
+
+export const vLogin = checkSchema({
+  loginOrEmail: {
+    trim: {},
+    isLength: {options: {min: 1, max: 1000}}
+  },
+  password: {
+    trim: {},
+    isLength: {options: {min: 6, max: 10}}
+  }
+})
+
+export const vCUser = checkSchema({
+  login: {
+    trim: {},
+    isLength: {options: {min: 3, max: 10}},
+    matches: {options: loginRegex}
+  },
+  password: {
+    trim: {},
+    isLength: {options: {min: 6, max: 20}},
+  },
+  email: {
+    trim: {},
+    matches: {options: emailRegex}
+  }
 })

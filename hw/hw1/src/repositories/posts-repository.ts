@@ -1,15 +1,8 @@
-import { state } from "../state"
-import { postsCollection } from "./db"
+import { postsCollection, usersCollection } from "./db"
 import { ObjectId } from "mongodb";
+import { getAllFromCollection, IGetParams, IPagedRes } from "../helpers/helpers";
+import { IUser } from "../domain/users-service";
 
-
-interface getParams {
-  id?: string,
-  sortBy: string,
-  sortDirection: string,
-  pageNumber: number,
-  pageSize: number
-}
 
 export interface IPost {
   id: string,
@@ -26,39 +19,9 @@ const mapIPost = ({id, title, shortDescription, content, blogId, blogName, creat
 })
 
 export const postsRepository = {
-  async getAll({sortBy, sortDirection, pageNumber, pageSize, id}: getParams) {
-    const skip = (pageNumber - 1) * pageSize
-
-    //*todo #any
-    const sort: any = {}
-    sort[sortBy] = sortDirection === 'asc' ? 1 : -1
-    // if(!sort.createdAt){
-    //   sort.createdAt = sortDirection === 'asc' ? 1 : -1
-    // }
-    //*todo #any
-    const filter: any = {}
-    if (id) {
-      filter.blogId = id
-    }
-
-    const totalCount = await postsCollection.countDocuments(filter)
-
-    const items =
-      await postsCollection
-        .find(filter)
-        .project({_id: 0})
-        .sort(sort)
-        .limit(pageSize)
-        .skip(skip)
-        .toArray()
-
-    return {
-      pagesCount: Math.ceil(totalCount / pageSize),
-      page: pageNumber,
-      totalCount,
-      pageSize,
-      items
-    }
+  async getAll(query: IGetParams) {
+    const res:IPagedRes<IPost> = await getAllFromCollection(query, postsCollection)
+    return res
   },
   async create({title, shortDescription, content, blogId, blogName}: IPost): Promise<IPost> {
     const newPost = {
@@ -68,7 +31,7 @@ export const postsRepository = {
       content,
       blogId,
       blogName,
-      createdAt: new Date().toISOString(),
+      createdAt: new Date().toISOString()
     }
     await postsCollection.insertOne(newPost)
     return mapIPost(newPost)
