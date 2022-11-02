@@ -1,4 +1,3 @@
-import { state } from "../state";
 import { blogsCollection } from "./db";
 import { ObjectId } from "mongodb";
 
@@ -18,8 +17,6 @@ interface getParams {
   pageNumber: number,
   pageSize: number
 }
-
-const {blogs} = state
 export const blogsRepository = {
   async getAll({searchNameTerm, sortBy, sortDirection, pageNumber, pageSize}: getParams) {
 

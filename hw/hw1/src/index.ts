@@ -1,11 +1,12 @@
 import express from 'express'
 import bodyParser from "body-parser"
-import { blogsRouter } from "./routers/blogs-router"
-import { testingRouter } from "./routers/reset-router"
-import { postsRouter } from "./routers/posts-router";
-import { runDb } from "./repositories/db";
-import { authRouter } from "./routers/auth-router";
-import { usersRouter } from "./routers/users-router";
+import { blogsRouter } from "./01.routers/blogs-router";
+import { testingRouter } from "./01.routers/reset-router";
+import { runDb } from "./03.repositories/db";
+import { postsRouter } from "./01.routers/posts-router";
+import { usersRouter } from "./01.routers/users-router";
+import { authRouter } from "./01.routers/auth-router";
+
 
 const port = 3000
 const app = express()

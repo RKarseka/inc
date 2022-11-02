@@ -1,4 +1,4 @@
-import { usersRepository } from "../repositories/users-repository";
+import { usersRepository } from "../03.repositories/users-repository";
 
 export const authService = {
   async checkAuth(loginOrEmail: string, password: string) {

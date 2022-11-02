@@ -1,8 +1,7 @@
 import { usersCollection } from "./db";
-import { IUser } from "../domain/users-service";
+import { IUser } from "../02.domain/users-service";
 
 export const usersRepository = {
-
   async insertOne(newUser: IUser) {
     const res = await usersCollection.insertOne(newUser)
     console.log('const res = ', res)

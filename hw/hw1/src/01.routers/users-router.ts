@@ -1,20 +1,15 @@
 import { Request, Response, Router } from "express";
 import { vAuth, vCUser } from "../validators/validators";
-import { IUser, usersService } from "../domain/users-service";
 import { ISearchFields, makeGetAllParams } from "../helpers/helpers";
 import { authValidationMiddleware, inputValidationMiddleware } from "../middlewares/input-validation-midleware";
+import { IUser, usersService } from "../02.domain/users-service";
 
 export const usersRouter = Router({})
 
 
 usersRouter.get('/', vAuth, authValidationMiddleware, async (req: Request, res: Response) => {
-    const searchFields: ISearchFields<IUser>[] = [
-      {name: 'login', query: 'searchLoginTerm'},
-      {name: 'email', query: 'searchEmailTerm'}
-    ]
-    // {login: 'searchLoginTerm', email: 'searchEmailTerm'}
-    const params = makeGetAllParams<IUser>(req.params, searchFields)
-    res.send(await usersService.getAllUsers(params))
+    const users = await usersService.getAllUsers(req.query)
+    res.send(users)
   }
 )
 

@@ -1,9 +1,10 @@
 import { Request, Response, Router } from "express"
 import { vCEBlog, vCEPost } from "../validators/validators";
 import { authValidationMiddleware, inputValidationMiddleware } from "../middlewares/input-validation-midleware";
-import { blogsRepository, IBlog } from "../repositories/blogs-repository";
-import { postsRepository } from "../repositories/posts-repository";
-import { blogsService } from "../domain/blogs-service";
+import { blogsService } from "../02.domain/blogs-service";
+import { blogsRepository } from "../03.repositories/blogs-repository";
+import { postsRepository } from "../03.repositories/posts-repository";
+
 
 export const blogsRouter = Router({})
 blogsRouter.get('/', async (req: Request, res: Response) => {

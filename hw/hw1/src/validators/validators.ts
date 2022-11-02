@@ -1,5 +1,5 @@
 import { checkSchema } from "express-validator"
-import { blogsRepository } from "../repositories/blogs-repository";
+import { blogsRepository } from "../03.repositories/blogs-repository";
 
 const creds = 'Basic YWRtaW46cXdlcnR5'
 const websiteUrlRegex = '^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$'

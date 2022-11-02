@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
-import { authService } from "../domain/auth-service";
 import { vLogin } from "../validators/validators";
 import { inputValidationMiddleware } from "../middlewares/input-validation-midleware";
+import { authService } from "../02.domain/auth-service";
 
 export const authRouter = Router({})
 

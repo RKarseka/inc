@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import { blogsRepository } from "../repositories/blogs-repository";
-import { postsRepository } from "../repositories/posts-repository";
 import { ParsedQs } from "qs";
 import { ISearchFields, makeGetAllParams } from "../helpers/helpers";
-import { getAllFromCollection } from "../repositories/abstract-repository";
-import { postsCollection } from "../repositories/db";
+import { blogsRepository } from "../03.repositories/blogs-repository";
+import { postsRepository } from "../03.repositories/posts-repository";
+import { postsCollection } from "../03.repositories/db";
+import { abstractRepository } from "../03.repositories/abstract-repository";
 
 export interface IPost {
   id: string,
@@ -20,7 +20,7 @@ export const postsService = {
   async getAllPosts(query: ParsedQs) {
     const searchFields: ISearchFields<IPost>[] = []
     const params = makeGetAllParams(query, searchFields)
-    return await getAllFromCollection<IPost>(params, postsCollection)
+    return await abstractRepository.getAllFromCollection<IPost>(params, postsCollection)
   }
 }
 

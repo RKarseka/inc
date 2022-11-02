@@ -1,6 +1,6 @@
 import { postsCollection } from "./db"
 import { ObjectId } from "mongodb";
-import { IPost } from "../domain/posts-service"
+import { IPost } from "../02.domain/posts-service";
 
 const mapIPost = ({id, title, shortDescription, content, blogId, blogName, createdAt}: IPost): IPost => ({
   id, title, shortDescription, content, blogId, blogName, createdAt

@@ -1,9 +1,9 @@
-import {  ISearchFields, makeGetAllParams } from "../helpers/helpers";
-import { blogsRepository } from "../repositories/blogs-repository";
 import { ParsedQs } from "qs";
-import { postsCollection } from "../repositories/db";
-import { getAllFromCollection } from "../repositories/abstract-repository";
 import { IPost } from "./posts-service";
+import { blogsRepository } from "../03.repositories/blogs-repository";
+import { ISearchFields, makeGetAllParams } from "../helpers/helpers";
+import { postsCollection } from "../03.repositories/db";
+import { abstractRepository } from "../03.repositories/abstract-repository";
 
 
 export const blogsService = {
@@ -13,6 +13,6 @@ export const blogsService = {
 
     const searchFields: ISearchFields<IPost>[] = [ {name: 'blogId', query: 'blogId'} ]
     const params = makeGetAllParams({...query, blogId}, searchFields)
-    return await getAllFromCollection<IPost>(params, postsCollection)
+    return await abstractRepository.getAllFromCollection<IPost>(params, postsCollection)
   }
 }

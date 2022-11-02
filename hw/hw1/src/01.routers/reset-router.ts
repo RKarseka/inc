@@ -1,6 +1,5 @@
 import { Request, Response, Router } from "express"
-import { state } from "../state"
-import { blogsCollection, db, postsCollection } from "../repositories/db";
+import { blogsCollection, postsCollection } from "../03.repositories/db";
 
 export const testingRouter = Router({})
 testingRouter.delete('/all-data', async (req: Request, res: Response) => {

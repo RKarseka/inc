@@ -1,9 +1,10 @@
 import { Request, Response, Router } from "express"
-import { postsRepository } from "../repositories/posts-repository";
 import { authValidationMiddleware, inputValidationMiddleware } from "../middlewares/input-validation-midleware";
 import { vBlogID, vCEPost } from "../validators/validators";
-import { blogsRepository } from "../repositories/blogs-repository"
-import { postsService } from "../domain/posts-service"
+import { blogsRepository } from "../03.repositories/blogs-repository";
+import { postsRepository } from "../03.repositories/posts-repository";
+import { postsService } from "../02.domain/posts-service";
+
 
 export const postsRouter = Router({})
 

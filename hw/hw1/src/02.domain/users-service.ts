@@ -1,6 +1,10 @@
-import { usersRepository } from "../repositories/users-repository";
-import { IGetParams } from "../helpers/helpers";
+import { IGetParams, ISearchFields, makeGetAllParams } from "../helpers/helpers";
 import { ObjectId } from "mongodb";
+import { usersRepository } from "../03.repositories/users-repository";
+import { IPost } from "./posts-service";
+import { ParsedQs } from "qs";
+import { abstractRepository } from "../03.repositories/abstract-repository";
+import { usersCollection } from "../03.repositories/db";
 
 export interface IUser {
   id: string,
@@ -16,8 +20,13 @@ interface ICreateUserParams {
 }
 
 export const usersService = {
-  async getAllUsers(query: IGetParams<IUser>) {
-    return await usersRepository.getAll(query)
+  async getAllUsers(query: ParsedQs) {
+    const searchFields: ISearchFields<IUser>[] = [
+      {name: 'login', query: 'searchLoginTerm'},
+      {name: 'email', query: 'searchEmailTerm'}
+    ]
+    const params = makeGetAllParams<IUser>(query, searchFields)
+    return await abstractRepository.getAllFromCollection<IUser>(params, usersCollection)
   },
   async createUser({login, password, email}: ICreateUserParams) {
     const newUser = {
