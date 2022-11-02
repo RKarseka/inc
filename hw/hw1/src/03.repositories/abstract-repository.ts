@@ -1,4 +1,3 @@
-// export const getAllFromCollection = async <T>(query: IGetParams, collection: Collection): Promise<IPagedRes<T>> => {
 import { IGetParams } from "../helpers/helpers";
 
 export interface IPagedRes<T> {
@@ -9,17 +8,21 @@ export interface IPagedRes<T> {
   items: T[]
 }
 
+const mapFnDef = <T>(item: T):T => item
+
 export const abstractRepository = {
-  async getAllFromCollection<T>(query: IGetParams<T>, collection: any): Promise<IPagedRes<T>> {
+// export const getAllFromCollection = async <T>(query: IGetParams, collection: Collection): Promise<IPagedRes<T>> => {
+  async getAllFromCollection<T>(query: IGetParams<T>, collection: any, mapFn = mapFnDef<T>): Promise<IPagedRes<T>> {
     const {skip, pageSize, pageNumber, filters, sort} = query
     const totalCount = await collection.countDocuments(filters)
-    const items = await collection
+    const itemsRaw = await collection
       .find(filters)
       .project({_id: 0})
       .sort(sort)
       .limit(pageSize)
       .skip(skip)
-      .toArray() as T[]
+      .toArray()
+    const items = itemsRaw.map(mapFn)
     return {
       pagesCount: Math.ceil(totalCount / pageSize),
       page: pageNumber,

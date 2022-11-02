@@ -4,6 +4,7 @@ import { IUser } from "../02.domain/users-service";
 export const usersRepository = {
   async insertOne(newUser: IUser) {
     const res = await usersCollection.insertOne(newUser)
+    //@todo
     console.log('const res = ', res)
     return
   },

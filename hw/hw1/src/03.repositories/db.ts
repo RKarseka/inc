@@ -1,4 +1,4 @@
-import { Collection, MongoClient } from "mongodb"
+import { MongoClient } from "mongodb"
 import * as dotenv from 'dotenv'
 import { IBlog } from "./blogs-repository";
 import { IPost } from "../02.domain/posts-service";
