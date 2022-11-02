@@ -27,8 +27,7 @@ export const usersService = {
     ]
     const params = makeGetAllParams<IUser>(query, searchFields)
     const mapFn = ({id, login, email, createdAt}: IUser): IUser => ({id, login, email, createdAt})
-    const users = await abstractRepository.getAllFromCollection<IUser>(params, usersCollection, mapFn)
-    return
+    return await abstractRepository.getAllFromCollection<IUser>(params, usersCollection, mapFn)
   },
   async createUser({login, password, email}: ICreateUserParams) {
     const newUser = {
