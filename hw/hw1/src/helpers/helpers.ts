@@ -45,7 +45,8 @@ export const makeGetAllParams = (query: ParsedQs, searchFields: string[]): IGetP
 }
 
 
-export const getAllFromCollection = async <T>(query: IGetParams, collection: Collection): Promise<IPagedRes<T>> => {
+// export const getAllFromCollection = async <T>(query: IGetParams, collection: Collection): Promise<IPagedRes<T>> => {
+export const getAllFromCollection = async <T>(query: IGetParams, collection: any): Promise<IPagedRes<T>> => {
   const {skip, pageSize, pageNumber, filter, sort} = query
   const totalCount = await collection.countDocuments(filter)
   const items = await collection
