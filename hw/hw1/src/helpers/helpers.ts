@@ -22,14 +22,10 @@ export const makeGetAllParams = <T>(params: ParsedQs, searchFields: ISearchField
   const pageNumber = +(params.pageNumber || 1)
   const pageSize = +(params.pageSize || 10)
   const skip = (pageNumber - 1) * pageSize
-  const sort: {[sortField: string]: SortDirection} = {}
-  const sortDirection = params.sortDirection?.toString() as SortDirection
-  if (params.sortBy) {
-    sort[params.sortBy?.toString()] = sortDirection
-  }
-  if (params.sortBy?.toString() !== 'createdAt') {
-    sort.createdAt = -1
-  }
+  const sortBy = params.sortBy?.toString() || 'createdAt'
+  const sortDirection = (params.sortDirection?.toString() || -1) as SortDirection
+  const sort: {[sortField: string]: SortDirection} = {createdAt: -1, [sortBy]: sortDirection}
+
   let filters: Filter<T> = {}
 
   for (const field of searchFields) {
