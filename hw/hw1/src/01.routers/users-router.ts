@@ -1,8 +1,7 @@
 import { Request, Response, Router } from "express";
 import { vAuth, vCUser } from "../validators/validators";
-import { ISearchFields, makeGetAllParams } from "../helpers/helpers";
 import { authValidationMiddleware, inputValidationMiddleware } from "../middlewares/input-validation-midleware";
-import { IUser, usersService } from "../02.domain/users-service";
+import { usersService } from "../02.domain/users-service";
 
 export const usersRouter = Router({})
 
