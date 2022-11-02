@@ -1,28 +1,12 @@
-import { postsCollection, usersCollection } from "./db"
+import { postsCollection } from "./db"
 import { ObjectId } from "mongodb";
-import { getAllFromCollection, IGetParams, IPagedRes } from "../helpers/helpers";
-import { IUser } from "../domain/users-service";
-
-
-export interface IPost {
-  id: string,
-  title: string,
-  shortDescription: string,
-  content: string,
-  blogId: string,
-  blogName: string,
-  createdAt: string
-}
+import { IPost } from "../domain/posts-service"
 
 const mapIPost = ({id, title, shortDescription, content, blogId, blogName, createdAt}: IPost): IPost => ({
   id, title, shortDescription, content, blogId, blogName, createdAt
 })
 
 export const postsRepository = {
-  async getAll(query: IGetParams) {
-    const res: IPagedRes<IPost> = await getAllFromCollection(query, postsCollection)
-    return res
-  },
   async create({title, shortDescription, content, blogId, blogName}: IPost): Promise<IPost> {
     const newPost = {
       id: new ObjectId() + '',

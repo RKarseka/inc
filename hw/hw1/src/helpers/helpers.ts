@@ -1,66 +1,44 @@
-import { Collection, SortDirection } from "mongodb"
+import { SortDirection, Filter } from "mongodb"
 import { ParsedQs } from "qs";
 
-export interface IGetParams {
+export type ISearchFields<T> = {
+  name: keyof T,
+  query: string
+  // [searchField in keyof T]?: string
+}
+
+export interface IGetParams<T> {
   sort: {
     [sortField: string]: SortDirection
   },
   pageNumber: number,
   pageSize: number,
   skip: number,
-  filter: IFilter
+  filters: Filter<T>
 }
 
-interface IFilter {
-  [fieldName: string]: {
-    $regex: RegExp
-  }
-}
 
-export interface IPagedRes<T> {
-  pagesCount: number,
-  page: number,
-  totalCount: number,
-  pageSize: number,
-  items: T[]
-}
-
-export const makeGetAllParams = (query: ParsedQs, searchFields: string[]): IGetParams => {
-  const pageNumber = +(query.pageNumber || 1)
-  const pageSize = +(query.pageSize || 10)
+export const makeGetAllParams = <T>(params: ParsedQs, searchFields: ISearchFields<T>[]): IGetParams<T> => {
+  const pageNumber = +(params.pageNumber || 1)
+  const pageSize = +(params.pageSize || 10)
   const skip = (pageNumber - 1) * pageSize
   const sort: {[sortField: string]: SortDirection} = {}
-  const sortDirection = query.sortDirection?.toString() as SortDirection
-  if (query.sortBy) {
-    sort[query.sortBy?.toString()] = sortDirection
+  const sortDirection = params.sortDirection?.toString() as SortDirection
+  if (params.sortBy) {
+    sort[params.sortBy?.toString()] = sortDirection
   }
-  if (query.sortBy?.toString() !== 'createdAt') {
+  if (params.sortBy?.toString() !== 'createdAt') {
     sort.createdAt = -1
   }
-  const filter: IFilter = {}
-  searchFields.forEach((fieldName: string) => {
-    filter[fieldName] = {$regex: new RegExp(query[fieldName]?.toString() || '', "i")}
-  })
-  return {sort, pageNumber, pageSize, skip, filter}
-}
+  let filters: Filter<T> = {}
 
-
-// export const getAllFromCollection = async <T>(query: IGetParams, collection: Collection): Promise<IPagedRes<T>> => {
-export const getAllFromCollection = async <T>(query: IGetParams, collection: any): Promise<IPagedRes<T>> => {
-  const {skip, pageSize, pageNumber, filter, sort} = query
-  const totalCount = await collection.countDocuments(filter)
-  const items = await collection
-    .find(filter)
-    .project({_id: 0})
-    .sort(sort)
-    .limit(pageSize)
-    .skip(skip)
-    .toArray() as T[]
-  return {
-    pagesCount: Math.ceil(totalCount / pageSize),
-    page: pageNumber,
-    totalCount,
-    pageSize,
-    items
+  for (const field of searchFields) {
+    const filter = {$regex: new RegExp(params[field.query]?.toString() || '', "i")}
+    if (filter) {
+      filters = {...filters, [field.name]: filter}
+    }
   }
+  return {sort, pageNumber, pageSize, skip, filters}
 }
+
+

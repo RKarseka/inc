@@ -16,8 +16,8 @@ interface ICreateUserParams {
 }
 
 export const usersService = {
-  async getAllUsers(params: IGetParams) {
-    return await usersRepository.getAll(params)
+  async getAllUsers(query: IGetParams<IUser>) {
+    return await usersRepository.getAll(query)
   },
   async createUser({login, password, email}: ICreateUserParams) {
     const newUser = {

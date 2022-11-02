@@ -1,9 +1,9 @@
 import { Request, Response, Router } from "express"
 import { vCEBlog, vCEPost } from "../validators/validators";
 import { authValidationMiddleware, inputValidationMiddleware } from "../middlewares/input-validation-midleware";
-import { blogsRepository } from "../repositories/blogs-repository";
+import { blogsRepository, IBlog } from "../repositories/blogs-repository";
 import { postsRepository } from "../repositories/posts-repository";
-import { makeGetAllParams} from "../helpers/helpers";
+import { blogsService } from "../domain/blogs-service";
 
 export const blogsRouter = Router({})
 blogsRouter.get('/', async (req: Request, res: Response) => {
@@ -35,17 +35,11 @@ blogsRouter.delete('/:id', vCEBlog, authValidationMiddleware,
   async (req: Request, res: Response) => {
     res.send(await blogsRepository.deleteOne(req.params.id) ? 204 : 404)
   })
-blogsRouter.get('/:blogId/posts', async (req: Request, res: Response) => {
-  const searchFields = [ 'id' ]
-  const params = makeGetAllParams(req.params, searchFields)
-
-  const blog = await blogsRepository.getOne(req.params.blogId)
-  if (!blog) {
-    return res.send(404)
-  }
-  const posts = await postsRepository.getAll(params)
-  res.send(posts)
-})
+blogsRouter.get('/:blogId/posts',
+  async (req: Request, res: Response) => {
+    const posts = await blogsService.getPostsByBlog(req.query, req.params.blogId)
+    res.send(posts || 404)
+  })
 blogsRouter.post('/:blogId/posts', vCEPost, authValidationMiddleware, inputValidationMiddleware,
   async (req: Request, res: Response) => {
     const blog = await blogsRepository.getOne(req.params.blogId)
