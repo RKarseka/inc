@@ -6,6 +6,7 @@ import { runDb } from "./03.repositories/db";
 import { postsRouter } from "./01.routers/posts-router";
 import { usersRouter } from "./01.routers/users-router";
 import { authRouter } from "./01.routers/auth-router";
+import { commentsRouter } from "./01.routers/comments-router";
 
 
 const port = 3000
@@ -18,6 +19,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json())
 
 app.use('/testing', testingRouter)
+app.use('/comments', commentsRouter)
 app.use('/auth', authRouter)
 app.use('/blogs', blogsRouter)
 app.use('/posts', postsRouter)

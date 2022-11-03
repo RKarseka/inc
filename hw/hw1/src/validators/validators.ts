@@ -8,6 +8,12 @@ const emailRegex = '^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$'
 const Authorization = {equals: {options: creds}}
 
 export const vAuth = checkSchema({Authorization})
+export const vEComment = checkSchema({
+  content: {
+    trim: {},
+    isLength: {options: {min: 20, max: 300}}
+  }
+})
 export const vCEBlog = checkSchema({
   name: {
     trim: {},

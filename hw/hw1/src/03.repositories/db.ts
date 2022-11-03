@@ -19,6 +19,7 @@ export const videosCollection = db.collection<ProductType>('videos')
 export const postsCollection = db.collection<IPost>('posts')
 export const blogsCollection = db.collection<IBlog>('blogs')
 export const usersCollection = db.collection<IUser>('users')
+export const commentsCollection = db.collection<IUser>('comments')
 
 export async function runDb() {
   try {

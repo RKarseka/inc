@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt"
 import { IGetParams, ISearchFields, makeGetAllParams } from "../helpers/helpers";
 import { ObjectId } from "mongodb";
 import { usersRepository } from "../03.repositories/users-repository";
@@ -47,5 +48,13 @@ export const usersService = {
   },
   async deleteUser(id: string) {
     return await usersRepository.deleteOne(id)
+  },
+  async checkCredentials(loginOrEmail: string, password: string) {
+    const user = await usersRepository.findByLoginOrEmail(loginOrEmail)
+    if (!user) return false
+    const passwordHash = await this._generateHash(password, user.passwordSalt)
+  },
+  async _generateHash(password: string, salt: string) {
+    const hash = await bcrypt.hash(password, salt)
   }
 }
