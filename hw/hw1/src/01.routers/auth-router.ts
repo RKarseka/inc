@@ -1,22 +1,24 @@
-import { Request, Response, Router } from "express";
-import { vAuth, vLogin } from "../validators/validators";
-import { authValidationMiddleware, inputValidationMiddleware } from "../middlewares/input-validation-midleware";
-import { authService } from "../02.domain/auth-service";
-import { usersService } from "../02.domain/users-service";
+import {Request, Response, Router} from "express";
+import {vLogin} from "../validators/validators";
+import {inputValidationMiddleware} from "../middlewares/input-validation-midleware";
+import {authService} from "../02.domain/auth-service";
+import {jwtService} from "../application/jwt-service";
+import {authMiddleware} from "../middlewares/auth-middleware";
 
 export const authRouter = Router({})
 
 authRouter.post('/login', vLogin, inputValidationMiddleware, async (req: Request, res: Response) => {
     const {loginOrEmail, password} = req.body
-
-    const user = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password)
-
-
-    const auth = await authService.checkAuth(loginOrEmail, password)
-    res.sendStatus(auth ? 204 : 401)
+    const user = await authService.checkCredentials(loginOrEmail, password)
+    if (!user) {
+      res.sendStatus(401)
+    } else {
+      const accessToken = jwtService.createJWT(user.id)
+      res.send({accessToken})
+    }
   }
 )
 
-authRouter.get('me',vAuth, authValidationMiddleware,  async (req: Request, res: Response) => {
-  res.send(await authService.getMe())
+authRouter.get('/me', authMiddleware, async (req: Request, res: Response) => {
+  res.send(req.user)
 })

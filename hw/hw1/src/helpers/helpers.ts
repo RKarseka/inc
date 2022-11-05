@@ -1,5 +1,5 @@
-import { SortDirection, Filter } from "mongodb"
-import { ParsedQs } from "qs";
+import {SortDirection, Filter} from "mongodb"
+import {ParsedQs} from "qs";
 
 export type ISearchFields<T> = {
   name: keyof T,
@@ -24,7 +24,7 @@ export const makeGetAllParams = <T>(params: ParsedQs, searchFields: ISearchField
   const skip = (pageNumber - 1) * pageSize
   const sortBy = params.sortBy?.toString() || 'createdAt'
   const sortDirection = (params.sortDirection?.toString() || -1) as SortDirection
-  const sort: {[sortField: string]: SortDirection} = {[sortBy]: sortDirection}
+  const sort: { [sortField: string]: SortDirection } = {[sortBy]: sortDirection}
   if (!sort.createdAt) {
     sort.createdAt = -1
   }
@@ -34,11 +34,11 @@ export const makeGetAllParams = <T>(params: ParsedQs, searchFields: ISearchField
 
   for (const field of searchFields) {
     if (params[field.query]) {
-      const filter:any = {[field.name]: {$regex: new RegExp(params[field.query]?.toString() || '', "i")}}
+      const filter: any = {[field.name]: {$regex: new RegExp(params[field.query]?.toString() || '', "i")}}
       if (filters['$or']) {
         filters['$or'].push(filter)
       } else {
-        filters['$or'] = [ filter ]
+        filters['$or'] = [filter]
       }
     }
   }
@@ -52,4 +52,10 @@ export const makeGetAllParams = <T>(params: ParsedQs, searchFields: ISearchField
   return {sort, pageNumber, pageSize, skip, filters}
 }
 
-
+// export const mapFnObj = <T>(properties: [keyof T], obj: T) => {
+//   const newObject: { [name: string]: any } = {}
+//   properties.forEach((key: keyof T) => {
+//     newObject[key] = obj[key]
+//   })
+//   return newObject
+// }

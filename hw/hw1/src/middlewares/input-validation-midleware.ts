@@ -1,6 +1,8 @@
-import { NextFunction, Request, Response } from "express"
-import { validationResult } from "express-validator"
-const errorFormatter = ({msg, param}: any) => ({message: msg, field: param})
+import {NextFunction, Request, Response} from "express"
+import {validationResult} from "express-validator"
+
+export const errorFormatter = ({msg, param}: any) => ({message: msg, field: param})
+export const customValidationResult = (req: Request) => validationResult(req).formatWith(errorFormatter)
 
 export const inputValidationMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const errors = validationResult(req).formatWith(errorFormatter)
@@ -12,9 +14,9 @@ export const inputValidationMiddleware = (req: Request, res: Response, next: Nex
 }
 
 export const authValidationMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  const errors = validationResult(req).formatWith(errorFormatter)
+  const errors = customValidationResult(req)
   if (!!errors.mapped()?.Authorization || !!errors.mapped()?.authorization) {
-    return res.send(401)
+    return res.sendStatus(401)
   }
   next()
 }

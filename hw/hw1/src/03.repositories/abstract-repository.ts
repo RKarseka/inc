@@ -1,5 +1,6 @@
 import { IGetParams } from "../helpers/helpers";
 import { postsCollection } from "./db";
+import {ObjectId} from "mongodb";
 
 export interface IPagedRes<T> {
   pagesCount: number,
@@ -9,7 +10,7 @@ export interface IPagedRes<T> {
   items: T[]
 }
 
-const mapFnDef = <T>(item: T): T => item
+export const mapFnDef = <T>(item: T): T => item
 
 export const abstractRepository = {
 // export const getAllFromCollection = async <T>(query: IGetParams, collection: Collection): Promise<IPagedRes<T>> => {
@@ -35,7 +36,7 @@ export const abstractRepository = {
   async getOne<T>(id: string, collection: any, mapFn = mapFnDef <T>): Promise<T | null> {
     const item: T | null = await collection.findOne({id}, {projection: {_id: 0}})
     if (!item) return null
-    return mapFnDef(item)
+    return mapFn(item)
   },
   async updateOne(id: string, fields: any, collection: any) {
     const result = await postsCollection.updateOne({id}, {$set: fields})

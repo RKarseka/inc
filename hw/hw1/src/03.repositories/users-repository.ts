@@ -5,7 +5,6 @@ export const usersRepository = {
   async insertOne(newUser: IUser) {
     const res = await usersCollection.insertOne(newUser)
     //@todo
-    console.log('const res = ', res)
     return
   },
   async deleteOne(id: string) {
@@ -17,6 +16,6 @@ export const usersRepository = {
       await usersCollection.countDocuments({email, password})
   },
   async findByLoginOrEmail(loginOrEmail: string) {
-    return await usersCollection.findOne({$or: [{email: loginOrEmail}, {userName: loginOrEmail}]})
+    return await usersCollection.findOne({$or: [{email: loginOrEmail}, {login: loginOrEmail}]})
   }
 }
