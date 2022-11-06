@@ -1,6 +1,5 @@
-import { IGetParams } from "../helpers/helpers";
-import { postsCollection } from "./db";
-import {ObjectId} from "mongodb";
+import {IGetParams} from "../helpers/helpers";
+import {postsCollection} from "./db";
 
 export interface IPagedRes<T> {
   pagesCount: number,
@@ -45,5 +44,10 @@ export const abstractRepository = {
   async deleteOne(id: string, collection: any) {
     const result = await collection.deleteOne({id})
     return !!result.deletedCount
+  },
+  async insertOne<T>(item: T, collection: any) {
+    const result = await collection.insertOne(item)
+     // @todo handle db response
+      return !!result
   }
 }

@@ -1,5 +1,5 @@
-import { checkSchema } from "express-validator"
-import { blogsRepository } from "../03.repositories/blogs-repository";
+import {checkSchema} from "express-validator"
+import {blogsRepository} from "../03.repositories/blogs-repository";
 
 const creds = 'Basic YWRtaW46cXdlcnR5'
 const websiteUrlRegex = '^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$'
@@ -85,5 +85,12 @@ export const vCUser = checkSchema({
   email: {
     trim: {},
     matches: {options: emailRegex}
+  }
+})
+
+export const vCEComment = checkSchema({
+  content: {
+    trim: {},
+    isLength: {options: {min: 20, max: 300}}
   }
 })

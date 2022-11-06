@@ -4,7 +4,6 @@ import {customValidationResult} from "./input-validation-midleware";
 import {IUserMe, usersService} from "../02.domain/users-service";
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-  const errors = customValidationResult(req)
   const authorization = req.headers.authorization
   if (!authorization) {
     res.sendStatus(401)

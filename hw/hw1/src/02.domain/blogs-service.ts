@@ -5,7 +5,6 @@ import { ISearchFields, makeGetAllParams } from "../helpers/helpers";
 import { postsCollection } from "../03.repositories/db";
 import { abstractRepository } from "../03.repositories/abstract-repository";
 
-
 export const blogsService = {
   async getPostsByBlog(query: ParsedQs, blogId: string) {
     const blog = await blogsRepository.getOne(blogId)
