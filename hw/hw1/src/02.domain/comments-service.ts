@@ -15,6 +15,16 @@ export interface IComment {
   createdAt: string
 }
 
+export interface ICommentFormatted {
+  id: string,
+  content: string,
+  commentatorInfo: {
+    userId: string,
+    userLogin: string
+  },
+  createdAt: string
+}
+
 export const commentsService = {
   async getOneComment(id: string): Promise<IComment | null> {
     return await abstractRepository.getOne<IComment>(id, commentsCollection)
@@ -46,6 +56,8 @@ export const commentsService = {
 
     const searchFields: ISearchFields<IComment>[] = [{name: 'postId', query: 'postId'}]
     const params = makeGetAllParams({...query, postId}, searchFields)
-    return await abstractRepository.getAllFromCollection<IComment>(params, commentsCollection)
+    const mapFn = ({id, content, userId, userLogin, createdAt}: IComment): ICommentFormatted => (
+      {id, content, commentatorInfo: {userId, userLogin}, createdAt})
+    return await abstractRepository.getAllFromCollection<IComment>(params, commentsCollection,mapFn)
   }
 }

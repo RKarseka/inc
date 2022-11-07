@@ -13,7 +13,7 @@ export const mapFnDef = <T>(item: T): T => item
 
 export const abstractRepository = {
 // export const getAllFromCollection = async <T>(query: IGetParams, collection: Collection): Promise<IPagedRes<T>> => {
-  async getAllFromCollection<T>(query: IGetParams<T>, collection: any, mapFn = mapFnDef<T>): Promise<IPagedRes<T>> {
+  async getAllFromCollection<T>(query: IGetParams<T>, collection: any, mapFn: any = mapFnDef<T>): Promise<IPagedRes<T>> {
     const {skip, pageSize, pageNumber, filters, sort} = query
     const totalCount = await collection.countDocuments(filters)
     const itemsRaw = await collection
@@ -47,7 +47,7 @@ export const abstractRepository = {
   },
   async insertOne<T>(item: T, collection: any) {
     const result = await collection.insertOne(item)
-     // @todo handle db response
-      return !!result
+    // @todo handle db response
+    return !!result
   }
 }
