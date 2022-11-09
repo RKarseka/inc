@@ -18,6 +18,10 @@ export const commentsRepository = {
       postId,
       createdAt: new Date().toISOString()
     }
-    return await abstractRepository.insertOne(newComment, commentsCollection)
+    const result = await abstractRepository.insertOne(newComment, commentsCollection)
+    if (result) {
+      return newComment
+    }
+    return
   }
 }

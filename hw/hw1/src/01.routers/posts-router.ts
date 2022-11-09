@@ -46,11 +46,17 @@ postsRouter.delete('/:id', vCEPost, authValidationMiddleware,
 postsRouter.get('/:id/comments', async (req: Request, res: Response) => {
   const comments = await commentsService.getComments(req.query, req.params.id)
   if (comments) {
-    res.sendStatus(201).send(comments)
+    res.send(comments)
   } else {
     res.sendStatus(404)
   }
 })
 postsRouter.post('/:id/comments', vCEComment, inputValidationMiddleware, authMiddleware, async (req: Request, res: Response) => {
-  res.sendStatus(await commentsService.createComment(req.params.id, req.body.content, req.user))
+  const comment = await commentsService.createComment(req.params.id, req.body.content, req.user)
+
+  if (typeof comment === 'object') {
+    res.status(201).send({...comment})
+  } else {
+    res.sendStatus(comment)
+  }
 })
