@@ -31,7 +31,7 @@ const mapFnForComment = ({id, content, userId, userLogin, createdAt}: IComment):
 
 export const commentsService = {
   async getOneComment(id: string): Promise<IComment | null> {
-    return await abstractRepository.getOne<IComment>(id, commentsCollection)
+    return await abstractRepository.getOne<IComment>(id, commentsCollection, mapFnForComment)
   },
   async editOwnComment(id: string, body: ParsedQs) {
     const notOwnComment = true
