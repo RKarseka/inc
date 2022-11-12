@@ -34,15 +34,10 @@ export const commentsService = {
     return await abstractRepository.getOne<IComment>(id, commentsCollection, mapFnForComment)
   },
   async editOwnComment(id: string, body: ParsedQs) {
-    const notOwnComment = true
-    if (notOwnComment) return 403
     const result = await abstractRepository.updateOne(id, {}, commentsCollection)
     return result ? 204 : 404
   },
   async delOwnComment(id: string) {
-    const notOwnComment = true
-    if (notOwnComment) return 403
-
     const result = await abstractRepository.deleteOne(id, commentsCollection)
     return result ? 204 : 404
   },
