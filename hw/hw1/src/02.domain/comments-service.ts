@@ -35,6 +35,7 @@ export const commentsService = {
   },
   async editOwnComment(id: string, body: ParsedQs) {
     const result = await abstractRepository.updateOne(id, {}, commentsCollection)
+    console.log('const result = ', result)
     return result ? 204 : 404
   },
   async delOwnComment(id: string) {

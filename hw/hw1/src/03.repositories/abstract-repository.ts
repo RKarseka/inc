@@ -38,7 +38,7 @@ export const abstractRepository = {
     return mapFn(item)
   },
   async updateOne(id: string, fields: any, collection: any) {
-    const result = await postsCollection.updateOne({id}, {$set: fields})
+    const result = await collection.updateOne({id}, {$set: fields})
     return !!result.matchedCount
   },
   async deleteOne(id: string, collection: any) {
