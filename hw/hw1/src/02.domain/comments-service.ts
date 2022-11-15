@@ -33,9 +33,9 @@ export const commentsService = {
   async getOneComment(id: string): Promise<IComment | null> {
     return await abstractRepository.getOne<IComment>(id, commentsCollection, mapFnForComment)
   },
-  async editOwnComment(id: string, body: ParsedQs) {
-    const result = await abstractRepository.updateOne(id, {}, commentsCollection)
-    console.log('const result = ', result)
+  async editOwnComment(id: string, content: ParsedQs) {
+
+    const result = await abstractRepository.updateOne(id, content, commentsCollection)
     return result ? 204 : 404
   },
   async delOwnComment(id: string) {
