@@ -1,7 +1,7 @@
 import {abstractRepository} from "../03.repositories/abstract-repository";
 import {commentsCollection} from "../03.repositories/db";
 import {ParsedQs} from "qs";
-import {IUserMe} from "./users-service";
+import {IUser, IUserMe} from "./users-service";
 import {commentsRepository} from "../03.repositories/comments-repository";
 import {postsRepository} from "../03.repositories/posts-repository";
 import {ISearchFields, makeGetAllParams} from "../helpers/helpers";
@@ -33,8 +33,10 @@ export const commentsService = {
   async getOneComment(id: string): Promise<IComment | null> {
     return await abstractRepository.getOne<IComment>(id, commentsCollection, mapFnForComment)
   },
-  async editOwnComment(id: string, content: ParsedQs) {
-
+  async editOwnComment(id: string, content: ParsedQs, user: IUserMe) {
+    const comment = await abstractRepository.getOne<IComment>(id, commentsCollection)
+    if(user.id !== comment?.userId)
+      return 403
     const result = await abstractRepository.updateOne(id, content, commentsCollection)
     return result ? 204 : 404
   },

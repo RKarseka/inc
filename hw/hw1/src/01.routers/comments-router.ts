@@ -18,7 +18,7 @@ commentsRouter.get('/:id', async (req: Request, res: Response) => {
 )
 commentsRouter.put('/:id', vEComment, authMiddleware, inputValidationMiddleware,
   async (req: Request, res: Response) => {
-    res.sendStatus(await commentsService.editOwnComment(req.params.id, req.body))
+    res.sendStatus(await commentsService.editOwnComment(req.params.id, req.body, req.user))
   })
 commentsRouter.delete('/:id', authMiddleware, async (req: Request, res: Response) => {
   res.sendStatus(await commentsService.delOwnComment(req.params.id))
