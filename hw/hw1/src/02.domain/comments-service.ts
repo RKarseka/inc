@@ -1,10 +1,11 @@
 import {abstractRepository} from "../03.repositories/abstract-repository";
 import {commentsCollection} from "../03.repositories/db";
 import {ParsedQs} from "qs";
-import {IUser, IUserMe} from "./users-service";
+import {IUserMe} from "./users-service";
 import {commentsRepository} from "../03.repositories/comments-repository";
 import {postsRepository} from "../03.repositories/posts-repository";
 import {ISearchFields, makeGetAllParams} from "../helpers/helpers";
+import {NextFunction, Request, Response} from "express";
 
 export interface IComment {
   id: string,
@@ -35,7 +36,7 @@ export const commentsService = {
   },
   async editOwnComment(id: string, content: ParsedQs, user: IUserMe) {
     const comment = await abstractRepository.getOne<IComment>(id, commentsCollection)
-    if(user.id !== comment?.userId)
+    if (user.id !== comment?.userId)
       return 403
     const result = await abstractRepository.updateOne(id, content, commentsCollection)
     return result ? 204 : 404
@@ -62,5 +63,13 @@ export const commentsService = {
     const searchFields: ISearchFields<IComment>[] = [{name: 'postId', query: 'postId'}]
     const params = makeGetAllParams({...query, postId}, searchFields)
     return await abstractRepository.getAllFromCollection<IComment>(params, commentsCollection, mapFnForComment)
+  },
+  async checkCommentPresent(req: Request, res: Response, next: NextFunction) {
+    const comment = await abstractRepository.getOne<IComment>(req.params.id, commentsCollection)
+    if (comment) {
+      next()
+    } else {
+      res.sendStatus(404)
+    }
   }
 }
