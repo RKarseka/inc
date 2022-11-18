@@ -41,7 +41,10 @@ export const commentsService = {
     const result = await abstractRepository.updateOne(id, content, commentsCollection)
     return result ? 204 : 404
   },
-  async delOwnComment(id: string) {
+  async delOwnComment(id: string, user: IUserMe) {
+    const comment = await abstractRepository.getOne<IComment>(id, commentsCollection)
+    if (user.id !== comment?.userId)
+      return 403
     const result = await abstractRepository.deleteOne(id, commentsCollection)
     return result ? 204 : 404
   },
