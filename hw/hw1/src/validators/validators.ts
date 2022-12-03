@@ -88,9 +88,23 @@ export const vCUser = checkSchema({
   }
 })
 
+export const vCEmail = checkSchema({
+  email: {
+    trim: {},
+    matches: {options: emailRegex}
+  }
+})
+
 export const vCEComment = checkSchema({
   content: {
     trim: {},
     isLength: {options: {min: 20, max: 300}}
+  }
+})
+
+export const vACode = checkSchema({
+  content: {
+    trim: {},
+    isLength: {options: {min: 22, max: 24}}
   }
 })

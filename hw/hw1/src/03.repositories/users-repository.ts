@@ -1,5 +1,5 @@
-import { usersCollection } from "./db"
-import { IUser } from "../02.domain/users-service"
+import {usersCollection} from "./db"
+import {IUser} from "../02.domain/users-service"
 
 export const usersRepository = {
   async insertOne(newUser: IUser) {
@@ -17,5 +17,8 @@ export const usersRepository = {
   },
   async findByLoginOrEmail(loginOrEmail: string) {
     return await usersCollection.findOne({$or: [{email: loginOrEmail}, {login: loginOrEmail}]})
+  },
+  async findByLoginOrEmail2(login: string, email: string) {
+    return await usersCollection.findOne({$or: [{email}, {login}]})
   }
 }

@@ -1,7 +1,7 @@
 import {Request, Response, Router} from "express";
 import {commentsService} from "../02.domain/comments-service";
-import {vAuth, vEComment} from "../validators/validators";
-import {authValidationMiddleware, inputValidationMiddleware} from "../middlewares/input-validation-midleware";
+import {vEComment} from "../validators/validators";
+import {inputValidationMiddleware} from "../middlewares/input-validation-midleware";
 import {authMiddleware} from "../middlewares/auth-middleware";
 
 

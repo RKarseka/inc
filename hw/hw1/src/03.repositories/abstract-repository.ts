@@ -32,13 +32,13 @@ export const abstractRepository = {
       items
     }
   },
-  async getOne<T>(id: string, collection: any, mapFn: any = mapFnDef <T>): Promise<T | null> {
-    const item: T | null = await collection.findOne({id}, {projection: {_id: 0}})
+  async getOne<T>(value: string, collection: any, mapFn: any = mapFnDef <T>, name = 'id'): Promise<T | null> {
+    const item: T | null = await collection.findOne({[name]: value}, {projection: {_id: 0}})
     if (!item) return null
     return mapFn(item)
   },
-  async updateOne(id: string, fields: any, collection: any) {
-    const result = await collection.updateOne({id}, {$set: fields})
+  async updateOne(value: string, fields: any, collection: any, filter = 'id') {
+    const result = await collection.updateOne({[filter]:value}, {$set: fields})
     return !!result.matchedCount
   },
   async deleteOne(id: string, collection: any) {

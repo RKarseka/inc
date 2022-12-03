@@ -13,7 +13,7 @@ usersRouter.get('/', vAuth, authValidationMiddleware, async (req: Request, res: 
 )
 
 usersRouter.post('/', vCUser, vAuth, authValidationMiddleware, inputValidationMiddleware, async (req: Request, res: Response) => {
-    res.status(201).send(await usersService.createUser(req.body))
+    res.status(201).send(await usersService.createUser(req.body, true))
   }
 )
 
