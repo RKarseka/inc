@@ -26,7 +26,7 @@ authRouter.post('/login', vLogin, inputValidationMiddleware, async (req: Request
 
 authRouter.post('/registration', vCUser, inputValidationMiddleware, async (req: Request, res: Response) => {
   const usersEmail = await usersService.getUserByEmail( req.body.email)
-  const usersLogin = await usersService.getUserByEmail(req.body.login)
+  const usersLogin = await usersService.getUserByLogin(req.body.login)
   if (usersEmail || usersLogin) {
     const field = usersLogin ? 'login' : 'email'
     res.status(400).send(makeError(field))
