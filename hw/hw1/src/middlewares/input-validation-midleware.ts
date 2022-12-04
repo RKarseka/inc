@@ -5,6 +5,7 @@ export const errorFormatter = ({msg, param}: any) => ({message: msg, field: para
 export const customValidationResult = (req: Request) => validationResult(req).formatWith(errorFormatter)
 
 export const inputValidationMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  console.log('const validationResult(req) = ', validationResult(req))
   const errors = validationResult(req).formatWith(errorFormatter)
   if (!errors.isEmpty()) {
     return res.status(400).json({errorsMessages: errors.array()})

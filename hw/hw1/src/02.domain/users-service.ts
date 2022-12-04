@@ -48,6 +48,10 @@ export const usersService = {
     return await abstractRepository.getOne(email, usersCollection, mapFn, 'email')
   },
 
+  async getUserByLogin<T>(login: string, mapFn = mapFnDef<T>): Promise<T | null> {
+    return await abstractRepository.getOne(login, usersCollection, mapFn, 'login')
+  },
+
   async getUserByCode<T>(code: string, mapFn = mapFnDef<T>): Promise<T | null> {
     return await abstractRepository.getOne(code, usersCollection, mapFn, 'confirmationCode')
   },

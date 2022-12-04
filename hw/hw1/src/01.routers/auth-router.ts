@@ -8,6 +8,7 @@ import {IUser, IUserWithConfirmation, usersService} from "../02.domain/users-ser
 import {emailManager} from "../-managers/email-manager";
 import {emailAdapter} from "../-adapters/email-adapter";
 import {usersRepository} from "../03.repositories/users-repository";
+import {makeError} from "../validators/helper";
 
 export const authRouter = Router({})
 
@@ -24,9 +25,11 @@ authRouter.post('/login', vLogin, inputValidationMiddleware, async (req: Request
 )
 
 authRouter.post('/registration', vCUser, inputValidationMiddleware, async (req: Request, res: Response) => {
-  const existUser = await usersRepository.findByLoginOrEmail2(req.body.login, req.body.email)
-  if (existUser) {
-    res.sendStatus(400)
+  const usersEmail = await usersService.getUserByEmail( req.body.email)
+  const usersLogin = await usersService.getUserByEmail(req.body.login)
+  if (usersEmail || usersLogin) {
+    const field = usersLogin ? 'login' : 'email'
+    res.status(400).send(makeError(field))
     return
   }
   const newUser = await usersService.createUser(req.body)
