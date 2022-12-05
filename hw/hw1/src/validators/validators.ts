@@ -103,7 +103,7 @@ export const vCEComment = checkSchema({
 })
 
 export const vACode = checkSchema({
-  content: {
+  code: {
     trim: {},
     isLength: {options: {min: 22, max: 24}}
   }
