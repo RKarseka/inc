@@ -42,7 +42,7 @@ authRouter.post('/registration', vCUser, inputValidationMiddleware, async (req: 
 authRouter.post('/registration-confirmation', vACode, inputValidationMiddleware, async (req: Request, res: Response) => {
   const user = await usersService.getUserByCode<IUserWithConfirmation>(req.body.code)
   if (!user || user.isConfirmed) {
-    res.sendStatus(400)
+    res.status(400).send(makeError('code'))
     return
   }
 
