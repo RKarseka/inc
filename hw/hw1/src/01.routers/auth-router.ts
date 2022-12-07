@@ -53,9 +53,10 @@ authRouter.post('/registration-confirmation', vACode, inputValidationMiddleware,
 
 authRouter.post('/registration-email-resending', vCEmail, inputValidationMiddleware, async (req: Request, res: Response) => {
   const getUser = await usersService.getUserByEmail<IUserWithConfirmation>(req.body.email)
-
-  if (!getUser) {
-    res.sendStatus(400)
+  console.log('const getUser = ', getUser)
+  if (!getUser || getUser.isConfirmed) {
+    const field = getUser ? 'email' : 'user'
+    res.status(400).send(makeError(field))
     return
   }
 
