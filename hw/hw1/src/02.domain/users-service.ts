@@ -16,7 +16,8 @@ export interface IUser {
 
 export interface IUserWithConfirmation extends IUser {
   isConfirmed: string,
-  confirmationCode: string
+  confirmationCode: string,
+  refreshToken?: string
 }
 
 type IUserSecure = Omit<IUser, "passwordHash">
@@ -39,8 +40,8 @@ export const usersService = {
     return await abstractRepository.getAllFromCollection<IUserSecure>(params, usersCollection, mapFn)
   },
 
-  async getUserById<T>(id: string, mapFn = mapFnDef<T>): Promise<T | null> {
-    return await abstractRepository.getOne(id, usersCollection, mapFn)
+  async getUserById(id: string) {
+    return await abstractRepository.getOne<IUserWithConfirmation>(id, usersCollection)
 
   },
 
@@ -85,12 +86,13 @@ export const usersService = {
   },
 
   async setEmailConfirmationForUserByCode(user: IUserWithConfirmation) {
-    return await abstractRepository.updateOne(
-      user.confirmationCode,
-      {...user, isConfirmed: true},
-      usersCollection,
-      'confirmationCode'
-    )
+    return await abstractRepository
+      .updateOne(
+        user.confirmationCode,
+        {...user, isConfirmed: true},
+        usersCollection,
+        'confirmationCode'
+      )
   },
 
   async updateConfirmationCode(user: IUserWithConfirmation): Promise<string | false> {

@@ -2,30 +2,52 @@ import {Request, Response, Router} from "express";
 import {vACode, vCEmail, vCUser, vLogin} from "../validators/validators";
 import {inputValidationMiddleware} from "../middlewares/input-validation-midleware";
 import {authService} from "../02.domain/auth-service";
-import {jwtService} from "../application/jwt-service";
 import {authMiddleware} from "../middlewares/auth-middleware";
-import {IUser, IUserWithConfirmation, usersService} from "../02.domain/users-service";
+import {IUserWithConfirmation, usersService} from "../02.domain/users-service";
 import {emailManager} from "../-managers/email-manager";
 import {emailAdapter} from "../-adapters/email-adapter";
-import {usersRepository} from "../03.repositories/users-repository";
 import {makeError} from "../validators/helper";
 
 export const authRouter = Router({})
 
 authRouter.post('/login', vLogin, inputValidationMiddleware, async (req: Request, res: Response) => {
     const {loginOrEmail, password} = req.body
-    const user = await authService.checkCredentials(loginOrEmail, password)
-    if (!user) {
+
+    const tokens = await authService.loginUser(loginOrEmail, password)
+
+    if (!tokens) {
       res.sendStatus(401)
-    } else {
-      const accessToken = jwtService.createJWT(user.id)
-      res.send({accessToken})
+      return
     }
+    const {accessToken, refreshToken} = tokens
+    res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true,})
+    res.send({accessToken})
+
   }
 )
 
+authRouter.post('/refresh-token', async (req: Request, res: Response) => {
+  const exitFn = () => res.sendStatus(401)
+
+  const prevRefreshToken = req.cookies.refreshToken
+  if (!prevRefreshToken) {
+    exitFn()
+    return
+  }
+
+  const tokens = await authService.updateAccessToken(prevRefreshToken)
+  if (!tokens) {
+    exitFn()
+    return
+  }
+
+  const {accessToken, refreshToken} = tokens
+  res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true,})
+  res.send({accessToken})
+})
+
 authRouter.post('/registration', vCUser, inputValidationMiddleware, async (req: Request, res: Response) => {
-  const usersEmail = await usersService.getUserByEmail( req.body.email)
+  const usersEmail = await usersService.getUserByEmail(req.body.email)
   const usersLogin = await usersService.getUserByLogin(req.body.login)
   if (usersEmail || usersLogin) {
     const field = usersLogin ? 'login' : 'email'
@@ -33,7 +55,7 @@ authRouter.post('/registration', vCUser, inputValidationMiddleware, async (req: 
     return
   }
   const newUser = await usersService.createUser(req.body)
-  const getUser = await usersService.getUserById<IUserWithConfirmation>(newUser.id)
+  const getUser = await usersService.getUserById(newUser.id)
   const email = emailManager.makeRegistrationConfirmationEmail(req.body.email, getUser?.confirmationCode)
   await emailAdapter.sendEmail(email)
   res.sendStatus(204)

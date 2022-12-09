@@ -108,3 +108,10 @@ export const vACode = checkSchema({
     isLength: {options: {min: 22, max: 24}}
   }
 })
+//
+// export const vARefreshToken = checkSchema({
+//   accessToken: {
+//     trim: {},
+//     isLength: {options: {min: 1}}
+//   }
+// })

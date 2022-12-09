@@ -1,5 +1,9 @@
 import {usersRepository} from "../03.repositories/users-repository";
-import bcrypt from "bcrypt";
+import {bcryptService} from "../-application/bcrypt-service";
+import {jwtService} from "../-application/jwt-service";
+import {abstractRepository} from "../03.repositories/abstract-repository";
+import {usersCollection} from "../03.repositories/db";
+import {usersService} from "./users-service";
 
 export interface IMe {
   email: string,
@@ -8,14 +12,43 @@ export interface IMe {
 }
 
 export const authService = {
-  async checkCredentials(loginOrEmail: string, password: string) {
-    const user = await usersRepository.findByLoginOrEmail(loginOrEmail)
-    if (!user) return false
-    const compare = await bcrypt.compare(password, user.passwordHash)
-    if (!compare) return false
-    return user
-  },
+
   async checkAuth(loginOrEmail: string, password: string) {
     return await usersRepository.loginOne(loginOrEmail, loginOrEmail, password)
+  },
+
+  async loginUser(loginOrEmail: string, password: string) {
+    const user = await usersRepository.findByLoginOrEmail(loginOrEmail)
+    if (!user) return false
+
+    const compare = await bcryptService.compare(password, user.passwordHash)
+    if (!compare) return false
+
+    const accessToken = jwtService.generateAccessToken(user.id) //10s
+
+    const refreshToken = jwtService.generateRefreshToken(user.id) //20s
+
+    const updateUserRefreshToken = await abstractRepository
+      .updateOne(user.id, {refreshToken}, usersCollection)
+
+    if (!updateUserRefreshToken) return false
+
+    return {accessToken, refreshToken}
+  },
+
+
+  async updateAccessToken(prevRefreshToken: string) {
+    const userId = await jwtService.getUserIdByRefreshToken(prevRefreshToken)
+    if (!userId) return false
+
+    const user = await usersService.getUserById(userId)
+    if (!user || user.refreshToken !== prevRefreshToken) return false
+
+    const accessToken = jwtService.generateAccessToken(user.id) //10s
+
+    const refreshToken = jwtService.generateRefreshToken(user.id) //20s
+
+
+    return {accessToken, refreshToken}
   }
 }

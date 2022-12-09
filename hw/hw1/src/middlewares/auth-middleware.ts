@@ -1,6 +1,5 @@
-import {jwtService} from "../application/jwt-service";
+import {jwtService} from "../-application/jwt-service";
 import {NextFunction, Request, Response} from "express";
-import {customValidationResult} from "./input-validation-midleware";
 import {IUserMe, usersService} from "../02.domain/users-service";
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
@@ -14,9 +13,9 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
   const userId = await jwtService.getUserIdByToken(token)
   if (userId) {
     const mapFn = ({id, login, email}: IUserMe): IUserMe => ({id, login, email})
-    req.user = await usersService.getUserById(userId, mapFn)
+    req.user = await usersService.getUserById(userId)
     next()
-  } else{
+  } else {
     res.sendStatus(401)
   }
 }
