@@ -8,14 +8,14 @@ export const jwtService = {
 
   generateAccessToken(userId: string) {
     const secret = settings.JWT_SECRET_AT
-    const expiresIn = '10d'
+    const expiresIn = '10s'
 
     return this.createJWT(userId, expiresIn, secret)
   },
 
   generateRefreshToken(userId: string) {
     const secret = settings.JWT_SECRET_RT
-    const expiresIn = '20d'
+    const expiresIn = '20s'
 
     return this.createJWT(userId, expiresIn, secret)
   },
