@@ -50,5 +50,16 @@ export const authService = {
 
 
     return {accessToken, refreshToken}
+  },
+
+  async logoutUser(refreshToken: string) {
+    const userId = await jwtService.getUserIdByRefreshToken(refreshToken)
+    if (!userId) return false
+
+    const user = await usersService.getUserById(userId)
+    if (!user || user.refreshToken !== refreshToken) return false
+
+    return await usersService.updateUser(userId, {refreshToken: null})
+
   }
 }

@@ -40,6 +40,10 @@ export const usersService = {
     return await abstractRepository.getAllFromCollection<IUserSecure>(params, usersCollection, mapFn)
   },
 
+  async updateUser(filterValue: string, user: {}, filter = 'id') {
+    return await abstractRepository.updateOne(filterValue, user, usersCollection, filter)
+  },
+
   async getUserById(id: string) {
     return await abstractRepository.getOne<IUserWithConfirmation>(id, usersCollection)
 

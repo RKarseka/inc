@@ -93,6 +93,20 @@ authRouter.post('/registration-email-resending', vCEmail, inputValidationMiddlew
   res.sendStatus(204)
 })
 
+authRouter.post('/logout', async (req: Request, res: Response) => {
+  const exitFn = () => res.sendStatus(401)
+  const refreshToken = req.cookies.refreshToken
+  if (!refreshToken) {
+    exitFn()
+    return
+  }
+
+  const logout = await authService.logoutUser(refreshToken)
+  logout ? res.sendStatus(204) : exitFn()
+
+})
+
 authRouter.get('/me', authMiddleware, async (req: Request, res: Response) => {
   res.send(req.user)
 })
+
