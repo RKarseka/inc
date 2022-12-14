@@ -48,6 +48,8 @@ export const authService = {
 
     const refreshToken = jwtService.generateRefreshToken(user.id) //20s
 
+    const newToken = await usersService.updateUser(userId, {refreshToken})
+    if (!newToken) return false
 
     return {accessToken, refreshToken}
   },
