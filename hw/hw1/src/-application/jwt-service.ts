@@ -25,6 +25,11 @@ export const jwtService = {
     return await this.getUserIdByToken(token, secret)
   },
 
+  async getUserIdByAccessToken(token: string) {
+    const secret = settings.JWT_SECRET_AT
+    return await this.getUserIdByToken(token, secret)
+  },
+
   async getUserIdByToken(token: string, secret = settings.JWT_SECRET) {
     try {
       const result: JwtPayload | string = jwt.verify(token, secret)
