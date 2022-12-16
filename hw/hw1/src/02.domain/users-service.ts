@@ -6,6 +6,12 @@ import {ParsedQs} from "qs";
 import {abstractRepository, mapFnDef} from "../03.repositories/abstract-repository";
 import {usersCollection} from "../03.repositories/db";
 
+export interface IUserShort {
+  id: string,
+  login: string,
+  email: string,
+}
+
 export interface IUser {
   id: string,
   login: string,
@@ -44,8 +50,8 @@ export const usersService = {
     return await abstractRepository.updateOne(filterValue, user, usersCollection, filter)
   },
 
-  async getUserById(id: string) {
-    return await abstractRepository.getOne<IUserWithConfirmation>(id, usersCollection)
+  async getUserById(id: string, mapFn = mapFnDef<IUserShort>) {
+    return await abstractRepository.getOne<IUserWithConfirmation>(id, usersCollection, mapFn)
 
   },
 
