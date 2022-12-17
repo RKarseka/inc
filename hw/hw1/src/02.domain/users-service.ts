@@ -7,7 +7,7 @@ import {abstractRepository, mapFnDef} from "../03.repositories/abstract-reposito
 import {usersCollection} from "../03.repositories/db";
 
 export interface IUserShort {
-  id: string,
+  userId: string,
   login: string,
   email: string,
 }
@@ -50,24 +50,24 @@ export const usersService = {
     return await abstractRepository.updateOne(filterValue, user, usersCollection, filter)
   },
 
-  async getUserById(id: string, mapFn = mapFnDef<IUserShort>) {
+  async getUserById(id: string, mapFn = mapFnDef<IUserMe, IUserShort>) {
     return await abstractRepository.getOne<IUserWithConfirmation>(id, usersCollection, mapFn)
 
   },
 
-  async getUserByEmail<T>(email: string, mapFn = mapFnDef<T>): Promise<T | null> {
+  async getUserByEmail<T>(email: string, mapFn = mapFnDef<T, T>): Promise<T | null> {
     return await abstractRepository.getOne(email, usersCollection, mapFn, 'email')
   },
 
-  async getUserByLogin<T>(login: string, mapFn = mapFnDef<T>): Promise<T | null> {
+  async getUserByLogin<T>(login: string, mapFn = mapFnDef<T, T>): Promise<T | null> {
     return await abstractRepository.getOne(login, usersCollection, mapFn, 'login')
   },
 
-  async getUserByCode<T>(code: string, mapFn = mapFnDef<T>): Promise<T | null> {
+  async getUserByCode<T>(code: string, mapFn = mapFnDef<T, T>): Promise<T | null> {
     return await abstractRepository.getOne(code, usersCollection, mapFn, 'confirmationCode')
   },
 
-  async getUserByEmailOrPassword<T>(code: string, mapFn = mapFnDef<T>): Promise<T | null> {
+  async getUserByEmailOrPassword<T>(code: string, mapFn = mapFnDef<T, T>): Promise<T | null> {
     return await abstractRepository.getOne(code, usersCollection, mapFn, 'confirmationCode')
   },
 

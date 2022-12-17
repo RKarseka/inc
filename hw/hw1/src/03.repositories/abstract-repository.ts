@@ -9,11 +9,11 @@ export interface IPagedRes<T> {
   items: T[]
 }
 
-export const mapFnDef = <T>(item: T): T => item
+export const mapFnDef = <T,D>(item: T): D => item as unknown as D
 
 export const abstractRepository = {
 // export const getAllFromCollection = async <T>(query: IGetParams, collection: Collection): Promise<IPagedRes<T>> => {
-  async getAllFromCollection<T>(query: IGetParams<T>, collection: any, mapFn: any = mapFnDef<T>): Promise<IPagedRes<T>> {
+  async getAllFromCollection<T>(query: IGetParams<T>, collection: any, mapFn: any = mapFnDef<T,T>): Promise<IPagedRes<T>> {
     const {skip, pageSize, pageNumber, filters, sort} = query
     const totalCount = await collection.countDocuments(filters)
     const itemsRaw = await collection
@@ -32,7 +32,7 @@ export const abstractRepository = {
       items
     }
   },
-  async getOne<T>(value: string, collection: any, mapFn: any = mapFnDef <T>, name = 'id'): Promise<T | null> {
+  async getOne<T>(value: string, collection: any, mapFn: any = mapFnDef <T,T>, name = 'id'): Promise<T | null> {
     const item: T | null = await collection.findOne({[name]: value}, {projection: {_id: 0}})
     if (!item) return null
     return mapFn(item)
