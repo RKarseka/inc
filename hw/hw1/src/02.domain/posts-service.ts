@@ -20,7 +20,7 @@ export const postsService = {
   async getAllPosts(query: ParsedQs) {
     const searchFields: ISearchFields<IPost>[] = []
     const params = makeGetAllParams(query, searchFields)
-    return await abstractRepository.getAllFromCollection<IPost>(params, postsCollection)
+    return await abstractRepository.getAllFromCollectionPaginated<IPost>(params, postsCollection)
   }
 }
 

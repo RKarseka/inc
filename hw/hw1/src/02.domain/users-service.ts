@@ -43,7 +43,7 @@ export const usersService = {
     ]
     const params = makeGetAllParams<IUserSecure>(query, searchFields)
     const mapFn = ({id, login, email, createdAt}: IUserSecure): IUserSecure => ({id, login, email, createdAt})
-    return await abstractRepository.getAllFromCollection<IUserSecure>(params, usersCollection, mapFn)
+    return await abstractRepository.getAllFromCollectionPaginated<IUserSecure>(params, usersCollection, mapFn)
   },
 
   async updateUser(filterValue: string, user: {}, filter = 'id') {

@@ -9,6 +9,7 @@ import {authRouter} from './01.routers/auth-router'
 import {commentsRouter} from './01.routers/comments-router'
 import {emailRouter} from './01.routers/email-router'
 import cookieParser from "cookie-parser";
+import {securityRouter} from "./01.routers/security-router";
 
 const port = 3000
 const app = express()
@@ -27,6 +28,7 @@ app.use('/blogs', blogsRouter)
 app.use('/posts', postsRouter)
 app.use('/users', usersRouter)
 app.use('/email', emailRouter)
+app.use('/security', securityRouter)
 
 const startApp = async () => {
   await runDb()

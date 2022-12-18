@@ -65,7 +65,7 @@ export const commentsService = {
 
     const searchFields: ISearchFields<IComment>[] = [{name: 'postId', query: 'postId'}]
     const params = makeGetAllParams({...query, postId}, searchFields)
-    return await abstractRepository.getAllFromCollection<IComment>(params, commentsCollection, mapFnForComment)
+    return await abstractRepository.getAllFromCollectionPaginated<IComment>(params, commentsCollection, mapFnForComment)
   },
   async checkCommentPresent(req: Request, res: Response, next: NextFunction) {
     const comment = await abstractRepository.getOne<IComment>(req.params.id, commentsCollection)

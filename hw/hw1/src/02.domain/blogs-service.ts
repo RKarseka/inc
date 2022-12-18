@@ -12,6 +12,6 @@ export const blogsService = {
 
     const searchFields: ISearchFields<IPost>[] = [ {name: 'blogId', query: 'blogId'} ]
     const params = makeGetAllParams({...query, blogId}, searchFields)
-    return await abstractRepository.getAllFromCollection<IPost>(params, postsCollection)
+    return await abstractRepository.getAllFromCollectionPaginated<IPost>(params, postsCollection)
   }
 }

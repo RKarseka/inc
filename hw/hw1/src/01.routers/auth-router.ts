@@ -10,7 +10,7 @@ import {makeError} from "../validators/helper";
 
 export const authRouter = Router({})
 
-authRouter.post('/login', vLogin, inputValidationMiddleware, async (req: Request, res: Response) => {
+authRouter.post('/login', async (req: Request, res: Response) => {
     const {loginOrEmail, password} = req.body
 
     const tokens = await authService.loginUser(loginOrEmail, password)
@@ -35,7 +35,7 @@ authRouter.post('/refresh-token', async (req: Request, res: Response) => {
     return
   }
 
-  const tokens = await authService.updateAccessToken(prevRefreshToken)
+  const tokens = false// await authService.updateAccessToken(prevRefreshToken)
   if (!tokens) {
     exitFn()
     return
