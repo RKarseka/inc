@@ -1,9 +1,8 @@
 import {usersRepository} from "../03.repositories/users-repository";
 import {bcryptService} from "../-application/bcrypt-service";
 import {jwtService} from "../-application/jwt-service";
-import {usersCollection} from "../03.repositories/db";
-import {usersService} from "./users-service";
 import {usersSessionsRepository} from "../03.repositories/usersSessions-repository";
+import {ObjectId} from "mongodb";
 
 export interface IMe {
   email: string,
@@ -24,7 +23,7 @@ export const authService = {
     const compare = await bcryptService.compare(password, user.passwordHash)
     if (!compare) return false
 
-    const refreshTokenData = jwtService.generateRefreshToken(user.id) //20s
+    const refreshTokenData = {id: new ObjectId() + '', ...jwtService.generateRefreshToken(user.id)} //20s
     const {refreshToken, deviceId} = refreshTokenData
 
     const accessToken = jwtService.generateAccessToken(user.id, deviceId) //10s
@@ -44,8 +43,8 @@ export const authService = {
 
 
   async updateAccessToken(prevRefreshToken: string) {
-    const userId = await jwtService.getUserIdByRefreshToken(prevRefreshToken)
-    if (!userId) return false
+    // const userId = await jwtService.getUserIdByRefreshToken(prevRefreshToken)
+    // if (!userId) return false
 
     const user = false //await usersService.getUserById(userId)
     // if (!user || user.refreshToken !== prevRefreshToken) return false
@@ -61,8 +60,8 @@ export const authService = {
   },
 
   async logoutUser(refreshToken: string) {
-    const userId = await jwtService.getUserIdByRefreshToken(refreshToken)
-    if (!userId) return false
+    // const userId = await jwtService.getUserIdByRefreshToken(refreshToken)
+    // if (!userId) return false
 
     // const user = await usersService.getUserById(userId)
     // if (!user || user.refreshToken !== refreshToken) return false

@@ -102,6 +102,7 @@ authRouter.post('/logout', async (req: Request, res: Response) => {
   }
 
   const logout = await authService.logoutUser(refreshToken)
+  // @ts-ignore
   logout ? res.sendStatus(204) : exitFn()
 
 })

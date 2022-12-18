@@ -33,8 +33,9 @@ export const jwtService = {
     const expiresIn = '20d'
     const deviceId = new ObjectId() + ''
     const refreshToken = this.createJWT({userId, deviceId}, expiresIn, secret)
-    const expirationDate = add(new Date(), {days: 20}) //seconds
-    return {deviceId, refreshToken, expirationDate, userId}
+    const lastActiveDate = new Date()
+    const expirationDate = add(lastActiveDate, {days: 20}) //seconds
+    return {deviceId, refreshToken, lastActiveDate, expirationDate, userId}
   },
 
   async getDataByRefreshToken(token: string) {

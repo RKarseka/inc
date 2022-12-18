@@ -1,4 +1,4 @@
-import {checkSchema} from "express-validator"
+import {checkSchema, cookie} from "express-validator"
 import {blogsRepository} from "../03.repositories/blogs-repository";
 
 const creds = 'Basic YWRtaW46cXdlcnR5'
@@ -30,21 +30,19 @@ export const vCEBlog = checkSchema({
   },
   Authorization
 })
-export const vBlogID = checkSchema(
-  {
-    blogId: {
-      custom: {
-        options: async (id: string) => {
-          if (!!(await blogsRepository.getOne(id))) {
-            return Promise.resolve()
-          } else {
-            return Promise.reject()
-          }
+export const vBlogID = checkSchema({
+  blogId: {
+    custom: {
+      options: async (id: string) => {
+        if (!!(await blogsRepository.getOne(id))) {
+          return Promise.resolve()
+        } else {
+          return Promise.reject()
         }
       }
     }
   }
-)
+})
 export const vCEPost = checkSchema({
   title: {
     trim: {},
