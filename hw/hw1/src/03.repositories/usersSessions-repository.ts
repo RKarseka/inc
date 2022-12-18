@@ -9,6 +9,6 @@ export const usersSessionsRepository = {
   },
 
   async getSessionsByUserId(userId: string) {
-
+await abstractRepository.getAllFromCollection({userId}, usersSessionsCollection)
   }
 }

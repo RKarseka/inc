@@ -1,4 +1,5 @@
 import {jwtService} from "../-application/jwt-service";
+import {usersSessionsRepository} from "../03.repositories/usersSessions-repository";
 
 export interface IUserSessionData {
   deviceId: string,
@@ -13,6 +14,7 @@ export const securityService = {
     if (!refreshTokenData) return null
     // @ts-ignore
     const {userId, deviceId} = refreshTokenData
+    await usersSessionsRepository.getSessionsByUserId(userId)
     return ''
   }
 }
