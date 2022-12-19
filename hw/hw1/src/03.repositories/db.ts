@@ -5,6 +5,7 @@ import {IPost} from "../02.domain/posts-service";
 import {IUser} from "../02.domain/users-service";
 import {IComment} from "../02.domain/comments-service";
 import {IUserSessionData} from "../02.domain/security-service";
+import {IRequestInfoLog} from "../02.domain/requestLog-service";
 
 dotenv.config()
 
@@ -26,6 +27,7 @@ export const blogsCollection = db.collection<IBlog>('blogs')
 export const usersCollection = db.collection<IUser>('users')
 export const commentsCollection = db.collection<IComment>('comments')
 export const usersSessionsCollection = db.collection<IUserSessionData>('usersSessions')
+export const requestsInfoLogCollection = db.collection<IRequestInfoLog>('requestsInfoLog')
 
 export async function runDb() {
   try {

@@ -16,7 +16,7 @@ export const authService = {
     return await usersRepository.loginOne(loginOrEmail, loginOrEmail, password)
   },
 
-  async loginUser(loginOrEmail: string, password: string) {
+  async loginUser(loginOrEmail: string, password: string, ip: string) {
     const user = await usersRepository.findByLoginOrEmail(loginOrEmail)
     if (!user) return false
 
@@ -28,9 +28,7 @@ export const authService = {
 
     const accessToken = jwtService.generateAccessToken(user.id, deviceId) //10s
 
-    const insertedSession = await usersSessionsRepository.insertSession(refreshTokenData)
-    const userByAccessTokenData = await jwtService.getDataByAccessTokenData(accessToken)
-    console.log('const userByAccessTokenData = ', userByAccessTokenData)
+    const insertedSession = await usersSessionsRepository.insertSession({...refreshTokenData, ip, title: 'string'}, ip)
 
     if (!insertedSession) return false
 

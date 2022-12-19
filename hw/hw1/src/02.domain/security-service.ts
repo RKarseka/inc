@@ -7,7 +7,9 @@ export interface IUserSessionData {
   refreshToken: string,
   expirationDate: Date,
   lastActiveDate: Date,
-  userId: string
+  userId: string,
+  ip: string,
+  title: string
 }
 
 export const securityService = {

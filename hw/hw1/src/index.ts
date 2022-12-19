@@ -10,9 +10,12 @@ import {commentsRouter} from './01.routers/comments-router'
 import {emailRouter} from './01.routers/email-router'
 import cookieParser from "cookie-parser";
 import {securityRouter} from "./01.routers/security-router";
+import {loggerMiddleware} from "./middlewares/logger-middleware";
 
 const port = 3000
 const app = express()
+
+app.set('trust proxy', true)
 
 app.use(bodyParser.urlencoded({
   extended: true
@@ -20,6 +23,7 @@ app.use(bodyParser.urlencoded({
 
 app.use(bodyParser.json())
 app.use(cookieParser())
+app.use(loggerMiddleware())
 
 app.use('/testing', testingRouter)
 app.use('/comments', commentsRouter)

@@ -13,7 +13,7 @@ export const authRouter = Router({})
 authRouter.post('/login', async (req: Request, res: Response) => {
     const {loginOrEmail, password} = req.body
 
-    const tokens = await authService.loginUser(loginOrEmail, password)
+    const tokens = await authService.loginUser(loginOrEmail, password, req.ip)
 
     if (!tokens) {
       res.sendStatus(401)

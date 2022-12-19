@@ -4,14 +4,14 @@ import {IUserSessionData} from "../02.domain/security-service";
 
 
 export const usersSessionsRepository = {
-  async insertSession(refreshTokenData: IUserSessionData) {
-    return await abstractRepository.insertOne(refreshTokenData, usersSessionsCollection)
+  async insertSession(session: IUserSessionData, ip: string) {
+    return await abstractRepository.insertOne(session, usersSessionsCollection)
   },
 
-  async getSessionsByUserId(userId: string) {
+  async getSessionsByUserId(userId: string,) {
     const items = await abstractRepository.getAllFromCollection({userId}, usersSessionsCollection)
-    return items.map(({lastActiveDate, deviceId}: IUserSessionData) =>
-      ({ip: '1.1.1.1', title: 'string', lastActiveDate, deviceId}))
+    return items.map(({lastActiveDate, deviceId, ip, title}: IUserSessionData) =>
+      ({ip, title, lastActiveDate, deviceId}))
   },
 
   async deleteSessionById(deviceId: string) {
