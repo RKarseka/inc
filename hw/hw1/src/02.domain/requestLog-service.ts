@@ -4,7 +4,8 @@ export interface IRequestInfoLog {
   ip: string,
   url: string,
   date: Date,
-  condition: boolean
+  condition: boolean,
+  method: string
 }
 
 export const requestLogService = {
