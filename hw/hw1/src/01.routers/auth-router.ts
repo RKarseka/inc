@@ -35,7 +35,7 @@ authRouter.post('/refresh-token', async (req: Request, res: Response) => {
     return
   }
 
-  const tokens = false// await authService.updateAccessToken(prevRefreshToken)
+  const tokens =await authService.updateAccessToken(prevRefreshToken)
   if (!tokens) {
     exitFn()
     return

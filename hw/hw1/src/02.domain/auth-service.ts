@@ -1,8 +1,9 @@
 import {usersRepository} from "../03.repositories/users-repository";
 import {bcryptService} from "../-application/bcrypt-service";
-import {jwtService} from "../-application/jwt-service";
+import {IRefreshToken, jwtService} from "../-application/jwt-service";
 import {usersSessionsRepository} from "../03.repositories/usersSessions-repository";
 import {ObjectId} from "mongodb";
+import {usersService} from "./users-service";
 
 export interface IMe {
   email: string,
@@ -41,30 +42,30 @@ export const authService = {
 
 
   async updateAccessToken(prevRefreshToken: string) {
-    // const userId = await jwtService.getUserIdByRefreshToken(prevRefreshToken)
-    // if (!userId) return false
+    const prevRefreshTokenData = await jwtService.getDataByRefreshToken(prevRefreshToken) as IRefreshToken | null
+    if (!prevRefreshTokenData) return false
 
-    const user = false //await usersService.getUserById(userId)
-    // if (!user || user.refreshToken !== prevRefreshToken) return false
+    const user = await usersService.getUserById(prevRefreshTokenData.userId)
+    if (!user || user.refreshToken !== prevRefreshToken) return false
 
-    // const accessToken = jwtService.generateAccessToken(user.id) //10s
-    //
-    // const refreshToken = jwtService.generateRefreshToken(user.id) //20s
-    //
-    // const newToken = await usersService.updateUser(userId, {refreshToken})
-    // if (!newToken) return false
-    //
-    // return {accessToken, refreshToken}
+    const accessToken = jwtService.generateAccessToken(user.id, prevRefreshTokenData.deviceId) //10s
+
+    const refreshToken = jwtService.generateRefreshToken(user.id) //20s
+
+    const newToken = await usersService.updateUser(user.id, {refreshToken})
+    if (!newToken) return false
+
+    return {accessToken, refreshToken}
   },
 
   async logoutUser(refreshToken: string) {
-    // const userId = await jwtService.getUserIdByRefreshToken(refreshToken)
-    // if (!userId) return false
+    const refreshTokenData = await jwtService.getDataByRefreshToken(refreshToken) as IRefreshToken | null
+    if (!refreshTokenData) return false
 
-    // const user = await usersService.getUserById(userId)
-    // if (!user || user.refreshToken !== refreshToken) return false
-    //
-    // return await usersService.updateUser(userId, {refreshToken: null})
+    const user = await usersService.getUserById(refreshTokenData.userId)
+    if (!user || user.refreshToken !== refreshToken) return false
+
+    return await usersService.updateUser(refreshTokenData.userId, {refreshToken: null})
 
   }
 }
