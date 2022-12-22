@@ -1,10 +1,10 @@
 import {abstractRepository, mapFnDef} from "./abstract-repository";
 import {usersSessionsCollection} from "./db";
-import {IUserSessionData} from "../02.domain/security-service";
+import {IUserSessionData, IUserSessionUpdateData} from "../02.domain/security-service";
 
 
 export const usersSessionsRepository = {
-  async insertSession(session: IUserSessionData, ip: string) {
+  async insertSession(session: IUserSessionData) {
     return await abstractRepository.insertOne(session, usersSessionsCollection)
   },
 
@@ -25,7 +25,12 @@ export const usersSessionsRepository = {
     }, usersSessionsCollection)
   },
 
-  async findSession(deviceId: string) {
-    return await abstractRepository.getOne<IUserSessionData>(deviceId, usersSessionsCollection, mapFnDef<IUserSessionData, IUserSessionData>, 'deviceId')
+  async findSession(value: string, field = 'deviceId') {
+    return await abstractRepository.getOne<IUserSessionData>(value, usersSessionsCollection, mapFnDef<IUserSessionData, IUserSessionData>, field)
+  },
+
+  async updateSession(filterValue: string, value: IUserSessionUpdateData, filterField = 'refreshToken') {
+
+    return await abstractRepository.updateOne(filterValue, value, usersSessionsCollection, filterField)
   }
 }

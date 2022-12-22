@@ -1,14 +1,18 @@
 import {IRefreshToken, jwtService} from "../-application/jwt-service";
 import {usersSessionsRepository} from "../03.repositories/usersSessions-repository";
 
-export interface IUserSessionData {
-  id: string,
-  deviceId: string,
+export interface IUserSessionUpdateData {
   refreshToken: string,
   expirationDate: Date,
   lastActiveDate: Date,
-  userId: string,
   ip: string,
+
+}
+
+export interface IUserSessionData extends IUserSessionUpdateData {
+  id: string,
+  deviceId: string,
+  userId: string,
   title: string
 }
 

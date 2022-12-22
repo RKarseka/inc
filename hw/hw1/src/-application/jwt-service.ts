@@ -28,10 +28,9 @@ export const jwtService = {
     return this.createJWT({userId, deviceId}, expiresIn, secret)
   },
 
-  generateRefreshToken(userId: string) {
+  generateRefreshToken(userId: string, deviceId = new ObjectId() + '') {
     const secret = settings.JWT_SECRET_RT
     const expiresIn = '20d'
-    const deviceId = new ObjectId() + ''
     const refreshToken = this.createJWT({userId, deviceId}, expiresIn, secret)
     const lastActiveDate = new Date()
     const expirationDate = add(lastActiveDate, {days: 20}) //seconds

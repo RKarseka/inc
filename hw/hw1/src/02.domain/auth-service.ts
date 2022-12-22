@@ -4,6 +4,7 @@ import {IRefreshToken, jwtService} from "../-application/jwt-service";
 import {usersSessionsRepository} from "../03.repositories/usersSessions-repository";
 import {ObjectId} from "mongodb";
 import {usersService} from "./users-service";
+import {securityService} from "./security-service";
 
 export interface IMe {
   email: string,
@@ -29,7 +30,7 @@ export const authService = {
 
     const accessToken = jwtService.generateAccessToken(user.id, deviceId) //10s
 
-    const insertedSession = await usersSessionsRepository.insertSession({...refreshTokenData, ip, title: 'string'}, ip)
+    const insertedSession = await usersSessionsRepository.insertSession({...refreshTokenData, ip, title: 'string'})
 
     if (!insertedSession) return false
 
@@ -41,19 +42,24 @@ export const authService = {
   },
 
 
-  async updateAccessToken(prevRefreshToken: string) {
+  async updateAccessToken(prevRefreshToken: string, ip: string) {
     const prevRefreshTokenData = await jwtService.getDataByRefreshToken(prevRefreshToken) as IRefreshToken | null
     if (!prevRefreshTokenData) return false
 
-    const user = await usersService.getUserById(prevRefreshTokenData.userId)
-    if (!user || user.refreshToken !== prevRefreshToken) return false
+    const session = await usersSessionsRepository.findSession(prevRefreshToken, 'refreshToken')
+    if (!session) return false
 
-    const accessToken = jwtService.generateAccessToken(user.id, prevRefreshTokenData.deviceId) //10s
+    const accessToken = jwtService.generateAccessToken(prevRefreshTokenData.userId, prevRefreshTokenData.deviceId) //10s
+    const {
+      refreshToken,
+      lastActiveDate,
+      expirationDate
+    } = jwtService.generateRefreshToken(prevRefreshTokenData.userId, prevRefreshTokenData.deviceId) //20s
 
-    const refreshToken = jwtService.generateRefreshToken(user.id) //20s
 
-    const newToken = await usersService.updateUser(user.id, {refreshToken})
-    if (!newToken) return false
+    const newSession = {ip, refreshToken, expirationDate, lastActiveDate}
+    const sessionCreationResult = await usersSessionsRepository.updateSession(prevRefreshToken, newSession, 'refreshToken')
+    if (!sessionCreationResult) return false
 
     return {accessToken, refreshToken}
   },

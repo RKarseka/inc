@@ -35,7 +35,7 @@ authRouter.post('/refresh-token', async (req: Request, res: Response) => {
     return
   }
 
-  const tokens =await authService.updateAccessToken(prevRefreshToken)
+  const tokens = await authService.updateAccessToken(prevRefreshToken, req.ip)
   if (!tokens) {
     exitFn()
     return
@@ -102,7 +102,6 @@ authRouter.post('/logout', async (req: Request, res: Response) => {
   }
 
   const logout = await authService.logoutUser(refreshToken)
-  // @ts-ignore
   logout ? res.sendStatus(204) : exitFn()
 
 })
