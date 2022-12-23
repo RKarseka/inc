@@ -14,8 +14,8 @@ export const usersSessionsRepository = {
       ({ip, title, lastActiveDate, deviceId}))
   },
 
-  async deleteSessionById(deviceId: string) {
-    return await abstractRepository.deleteOne(deviceId, usersSessionsCollection, 'deviceId')
+  async deleteSession(value: string, field='deviceId') {
+    return await abstractRepository.deleteOne(value, usersSessionsCollection, field)
   },
 
   async deleteAllSessionsExcludeCurrent(deviceId: string, userId: string) {

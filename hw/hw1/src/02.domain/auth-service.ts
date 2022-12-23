@@ -68,10 +68,7 @@ export const authService = {
     const refreshTokenData = await jwtService.getDataByRefreshToken(refreshToken) as IRefreshToken | null
     if (!refreshTokenData) return false
 
-    const user = await usersService.getUserById(refreshTokenData.userId)
-    if (!user || user.refreshToken !== refreshToken) return false
-
-    return await usersService.updateUser(refreshTokenData.userId, {refreshToken: null})
+    return await usersSessionsRepository.deleteSession(refreshToken, 'refreshToken')
 
   }
 }

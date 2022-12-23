@@ -43,6 +43,6 @@ export const securityService = {
 
     if (session.userId !== refreshTokenData.userId) return 403
 
-    return await usersSessionsRepository.deleteSessionById(session.deviceId)
+    return await usersSessionsRepository.deleteSession(session.deviceId)
   }
 }
