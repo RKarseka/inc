@@ -21,9 +21,9 @@ app.use(bodyParser.urlencoded({
   extended: true
 }))
 
+app.use(loggerMiddleware())
 app.use(bodyParser.json())
 app.use(cookieParser())
-app.use(loggerMiddleware())
 
 app.use('/testing', testingRouter)
 app.use('/comments', commentsRouter)
