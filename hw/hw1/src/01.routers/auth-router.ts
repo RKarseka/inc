@@ -7,6 +7,7 @@ import {IUserWithConfirmation, usersService} from "../02.domain/users-service";
 import {emailManager} from "../-managers/email-manager";
 import {emailAdapter} from "../-adapters/email-adapter";
 import {makeError} from "../validators/helper";
+import {loggerMW} from "../middlewares/logger-middleware";
 
 export const authRouter = Router({})
 
@@ -106,7 +107,7 @@ authRouter.post('/logout', async (req: Request, res: Response) => {
 
 })
 
-authRouter.get('/me', authMiddleware, async (req: Request, res: Response) => {
+authRouter.get('/me', loggerMW, authMiddleware, async (req: Request, res: Response) => {
   res.send(req.user)
 })
 

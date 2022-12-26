@@ -6,6 +6,7 @@ import {postsRepository} from "../03.repositories/posts-repository";
 import {postsService} from "../02.domain/posts-service";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {commentsService} from "../02.domain/comments-service";
+import {loggerMW} from "../middlewares/logger-middleware";
 
 
 export const postsRouter = Router({})
@@ -16,7 +17,7 @@ postsRouter.get('/', async (req: Request, res: Response) => {
   res.send(posts)
 })
 
-postsRouter.post('/', vBlogID, vCEPost, authValidationMiddleware, inputValidationMiddleware,
+postsRouter.post('/', loggerMW, vBlogID, vCEPost, authValidationMiddleware, inputValidationMiddleware,
   async (req: Request, res: Response) => {
     const blog = await blogsRepository.getOne(req.body.blogId)
     if (!blog) {
@@ -34,12 +35,12 @@ postsRouter.get('/:id', async (req: Request, res: Response) => {
   res.send(product || 404)
 })
 
-postsRouter.put('/:id', vBlogID, vCEPost, authValidationMiddleware, inputValidationMiddleware,
+postsRouter.put('/:id', loggerMW, vBlogID, vCEPost, authValidationMiddleware, inputValidationMiddleware,
   async (req: Request, res: Response) => {
     const newBlog = await postsRepository.editOne(req.params.id, req.body)
     res.send(newBlog ? 204 : 404)
   })
-postsRouter.delete('/:id', vCEPost, authValidationMiddleware,
+postsRouter.delete('/:id', loggerMW, vCEPost, authValidationMiddleware,
   async (req: Request, res: Response) => {
     res.send(await postsRepository.deleteOne(req.params.id) ? 204 : 404)
   })
@@ -51,7 +52,7 @@ postsRouter.get('/:id/comments', async (req: Request, res: Response) => {
     res.sendStatus(404)
   }
 })
-postsRouter.post('/:id/comments', vCEComment, authMiddleware, inputValidationMiddleware, async (req: Request, res: Response) => {
+postsRouter.post('/:id/comments', loggerMW, vCEComment, authMiddleware, inputValidationMiddleware, async (req: Request, res: Response) => {
   const comment = await commentsService.createComment(req.params.id, req.body.content, req.user)
 
   if (typeof comment === 'object') {
