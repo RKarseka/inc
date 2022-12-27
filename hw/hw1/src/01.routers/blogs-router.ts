@@ -4,7 +4,6 @@ import { authValidationMiddleware, inputValidationMiddleware } from "../middlewa
 import { blogsService } from "../02.domain/blogs-service";
 import { blogsRepository } from "../03.repositories/blogs-repository";
 import { postsRepository } from "../03.repositories/posts-repository";
-import {loggerMW} from "../middlewares/logger-middleware";
 
 
 export const blogsRouter = Router({})
@@ -20,7 +19,7 @@ blogsRouter.get('/', async (req: Request, res: Response) => {
   res.send(await blogsRepository.getAll(query))
 })
 
-blogsRouter.post('/', loggerMW, vCEBlog, authValidationMiddleware, inputValidationMiddleware,
+blogsRouter.post('/', vCEBlog, authValidationMiddleware, inputValidationMiddleware,
   async (req: Request, res: Response) => {
     res.status(201).send(await blogsRepository.create(req.body))
   })
@@ -28,12 +27,12 @@ blogsRouter.get('/:id', async (req: Request, res: Response) => {
   const product = await blogsRepository.getOne(req.params.id)
   res.send(product || 404)
 })
-blogsRouter.put('/:id', loggerMW, vCEBlog, authValidationMiddleware, inputValidationMiddleware,
+blogsRouter.put('/:id', vCEBlog, authValidationMiddleware, inputValidationMiddleware,
   async (req: Request, res: Response) => {
     const newBlog = await blogsRepository.editOne(req.params.id, req.body)
     res.send(newBlog ? 204 : 404)
   })
-blogsRouter.delete('/:id', loggerMW, vCEBlog, authValidationMiddleware,
+blogsRouter.delete('/:id', vCEBlog, authValidationMiddleware,
   async (req: Request, res: Response) => {
     res.send(await blogsRepository.deleteOne(req.params.id) ? 204 : 404)
   })
@@ -42,7 +41,7 @@ blogsRouter.get('/:blogId/posts',
     const posts = await blogsService.getPostsByBlog(req.query, req.params.blogId)
     res.send(posts || 404)
   })
-blogsRouter.post('/:blogId/posts', loggerMW, vCEPost, authValidationMiddleware, inputValidationMiddleware,
+blogsRouter.post('/:blogId/posts', vCEPost, authValidationMiddleware, inputValidationMiddleware,
   async (req: Request, res: Response) => {
     const blog = await blogsRepository.getOne(req.params.blogId)
     if (!blog) {
