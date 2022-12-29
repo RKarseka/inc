@@ -6,10 +6,9 @@ export const hotLog: any = {}
 export const loggerMW = async (req: Request, res: Response, next: NextFunction) => {
   const method = req.method
   const ip = req.ip
-  const url = req.baseUrl || req.originalUrl
+  const url = req.originalUrl || req.baseUrl
   const date = new Date().getTime()
   await requestLogService.saveRequest({ip, url, date, method})
-
   if (!hotLog[ip]) hotLog[ip] = {}
   if (!hotLog[ip][url]) hotLog[ip][url] = {}
   if (!hotLog[ip][url][method]) hotLog[ip][url][method] = []
