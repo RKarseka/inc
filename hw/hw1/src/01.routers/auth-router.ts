@@ -1,5 +1,5 @@
 import {Request, Response, Router} from "express";
-import {vACode, vCEmail, vCUser, vLogin} from "../validators/validators";
+import {vACode, vAPasswordRecovery, vCEmail, vCUser, vLogin} from "../validators/validators";
 import {inputValidationMiddleware} from "../middlewares/input-validation-midleware";
 import {authService} from "../02.domain/auth-service";
 import {authMiddleware} from "../middlewares/auth-middleware";
@@ -75,20 +75,21 @@ authRouter.post('/registration-confirmation', loggerMW, vACode, inputValidationM
 })
 
 authRouter.post('/registration-email-resending', loggerMW, vCEmail, inputValidationMiddleware, async (req: Request, res: Response) => {
-  const getUser = await usersService.getUserByEmail<IUserWithConfirmation>(req.body.email)
-  if (!getUser || getUser.isConfirmed) {
+  const user = await usersService.getUserByEmail<IUserWithConfirmation>(req.body.email)
+  if (!user || user.isConfirmed) {
     res.status(400).send(makeError('email'))
     return
   }
+  const confirmationCode = new Date().toISOString()
 
-  const confirmationCode = await usersService.updateConfirmationCode(getUser)
+  const updateUserResult = await usersService.updateUser(user.id, {...user, confirmationCode})
 
-  if (!confirmationCode) {
+  if (!updateUserResult) {
     res.sendStatus(400)
     return
   }
 
-  const email = emailManager.makeRegistrationConfirmationEmail(getUser.email, confirmationCode)
+  const email = emailManager.makeRegistrationConfirmationEmail(user.email, confirmationCode)
   await emailAdapter.sendEmail(email)
 
   res.sendStatus(204)
@@ -105,6 +106,28 @@ authRouter.post('/logout', async (req: Request, res: Response) => {
   const logout = await authService.logoutUser(refreshToken)
   logout ? res.sendStatus(204) : exitFn()
 
+})
+
+authRouter.post('/password-recovery', loggerMW, vCEmail, inputValidationMiddleware, async (req: Request, res: Response) => {
+  const result = await authService.sendRecoveryCode(req.body.email)
+
+  if (!result) {
+    res.status(400).send(makeError('email'))
+    return
+  }
+
+  res.sendStatus(204)
+})
+
+authRouter.post('/new-password', loggerMW, vAPasswordRecovery, inputValidationMiddleware, async (req: Request, res: Response) => {
+  const result = await authService.setNewPassword(req.body.recoveryCode, req.body.newPassword)
+
+  if (!result) {
+    res.status(400).send(makeError('email'))
+    return
+  }
+
+  res.sendStatus(204)
 })
 
 authRouter.get('/me', authMiddleware, async (req: Request, res: Response) => {

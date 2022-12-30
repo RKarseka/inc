@@ -5,6 +5,7 @@ import {usersRepository} from "../03.repositories/users-repository";
 import {ParsedQs} from "qs";
 import {abstractRepository, mapFnDef} from "../03.repositories/abstract-repository";
 import {usersCollection} from "../03.repositories/db";
+import {bcryptService} from "../-application/bcrypt-service";
 
 export interface IUserShort {
   userId: string,
@@ -23,7 +24,8 @@ export interface IUser {
 export interface IUserWithConfirmation extends IUser {
   isConfirmed: string,
   confirmationCode: string,
-  refreshToken?: string
+  refreshToken?: string,
+  recoveryCode?: string
 }
 
 type IUserSecure = Omit<IUser, "passwordHash">
@@ -67,13 +69,12 @@ export const usersService = {
     return await abstractRepository.getOne(code, usersCollection, mapFn, 'confirmationCode')
   },
 
-  async getUserByEmailOrPassword<T>(code: string, mapFn = mapFnDef<T, T>): Promise<T | null> {
-    return await abstractRepository.getOne(code, usersCollection, mapFn, 'confirmationCode')
+  async getUser<IUserWithConfirmation>(filterValue: string, filter = 'id', mapFn = mapFnDef<IUserWithConfirmation, IUserWithConfirmation>) {
+    return await abstractRepository.getOne(filterValue, usersCollection, mapFn, filter)
   },
 
   async createUser({login, password, email}: ICreateUserParams, isConfirmed = false) {
-    const passwordSalt = await bcrypt.genSalt(10)
-    const passwordHash = await bcrypt.hash(password, passwordSalt)
+    const passwordHash = await bcryptService.makePasswordHash(password)
 
     const newUser = {
       id: new ObjectId() + '',
@@ -99,15 +100,10 @@ export const usersService = {
     return await abstractRepository
       .updateOne(
         user.confirmationCode,
-        {...user, isConfirmed: true},
+        {...user, isConfirmed: true, confirmationCode: null},
         usersCollection,
         'confirmationCode'
       )
-  },
-
-  async updateConfirmationCode(user: IUserWithConfirmation): Promise<string | false> {
-    const confirmationCode = new Date().toISOString()
-    return await abstractRepository.updateOne(user.id, {...user, confirmationCode}, usersCollection) && confirmationCode
   },
 
   async deleteUser(id: string) {

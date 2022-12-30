@@ -3,8 +3,9 @@ import {bcryptService} from "../-application/bcrypt-service";
 import {IRefreshToken, jwtService} from "../-application/jwt-service";
 import {usersSessionsRepository} from "../03.repositories/usersSessions-repository";
 import {ObjectId} from "mongodb";
-import {usersService} from "./users-service";
-import {securityService} from "./security-service";
+import {IUserWithConfirmation, usersService} from "./users-service";
+import {emailManager} from "../-managers/email-manager";
+import {emailAdapter} from "../-adapters/email-adapter";
 
 export interface IMe {
   email: string,
@@ -69,6 +70,37 @@ export const authService = {
     if (!refreshTokenData) return false
 
     return await usersSessionsRepository.deleteSession(refreshToken, 'refreshToken')
+  },
 
+  async sendRecoveryCode(email: string) {
+    const user = await usersService.getUserByEmail<IUserWithConfirmation>(email)
+    if (!user) return null
+
+    const recoveryCode = new Date().toISOString()
+
+    const updateUserResult = await usersService.updateUser(user.id, {
+      ...user,
+      recoveryCode,
+      recoveryCodeTime: recoveryCode
+    })
+
+    if (!updateUserResult) return null
+
+    const emailObject = emailManager.makeRecoveryPasswordEmail(email, recoveryCode)
+    await emailAdapter.sendEmail(emailObject)
+
+    return true
+  },
+
+  async setNewPassword(code: string, newPassword: string) {
+    const user = await usersService.getUser(code, 'recoveryCode') as IUserWithConfirmation
+    if (!user) return null
+
+    const passwordHash = await bcryptService.makePasswordHash(newPassword)
+
+    const updateUserResult = await usersService.updateUser(user.id, {...user, passwordHash, recoveryCode: null})
+    if (!updateUserResult) return null
+
+    return true
   }
 }

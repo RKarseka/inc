@@ -106,6 +106,17 @@ export const vACode = checkSchema({
     isLength: {options: {min: 22, max: 24}}
   }
 })
+
+export const vAPasswordRecovery = checkSchema({
+  recoveryCode: {
+    trim: {},
+    isLength: {options: {min: 1}},
+  },
+  newPassword: {
+    trim: {},
+    isLength: {options: {min: 6, max: 20}},
+  }
+})
 //
 // export const vARefreshToken = checkSchema({
 //   accessToken: {
