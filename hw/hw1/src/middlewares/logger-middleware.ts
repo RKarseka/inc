@@ -1,6 +1,5 @@
 import {NextFunction, Request, Response} from "express";
 import {requestLogService} from "../02.domain/requestLog-service";
-import {differenceInSeconds} from "date-fns";
 
 export const hotLog: any = {}
 export const loggerMW = async (req: Request, res: Response, next: NextFunction) => {

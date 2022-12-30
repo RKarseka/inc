@@ -1,4 +1,4 @@
-import {MongoClient} from "mongodb"
+import {Collection, MongoClient} from "mongodb"
 import * as dotenv from 'dotenv'
 import {IBlog} from "./blogs-repository";
 import {IPost} from "../02.domain/posts-service";
@@ -26,7 +26,7 @@ export const postsCollection = db.collection<IPost>('posts')
 export const blogsCollection = db.collection<IBlog>('blogs')
 export const usersCollection = db.collection<IUser>('users')
 export const commentsCollection = db.collection<IComment>('comments')
-export const usersSessionsCollection = db.collection<IUserSessionData>('usersSessions')
+export const usersSessionsCollection: Collection<IUserSessionData> = db.collection<IUserSessionData>('usersSessions')
 export const requestsInfoLogCollection = db.collection<IRequestInfoLog>('requestsInfoLog')
 
 export async function runDb() {
