@@ -123,7 +123,7 @@ authRouter.post('/new-password', loggerMW, vAPasswordRecovery, inputValidationMi
   const result = await authService.setNewPassword(req.body.recoveryCode, req.body.newPassword)
 
   if (!result) {
-    res.status(400).send(makeError('email'))
+    res.status(400).send(makeError('recoveryCode'))
     return
   }
 

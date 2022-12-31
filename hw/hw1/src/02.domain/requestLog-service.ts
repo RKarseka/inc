@@ -4,7 +4,9 @@ export interface IRequestInfoLog {
   ip: string,
   url: string,
   date: number,
-  method: string
+  method: string,
+  body: string,
+  params: string
 }
 
 export const requestLogService = {
