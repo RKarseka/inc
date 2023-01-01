@@ -1,5 +1,5 @@
-import {Request, Response, Router} from "express";
-import {securityService} from "../02.domain/security-service";
+import { Request, Response, Router } from 'express'
+import { securityService } from '../02.domain/security-service'
 
 export const securityRouter = Router({})
 
@@ -35,11 +35,9 @@ securityRouter.delete('/devices', async (req: Request, res: Response) => {
   }
 
   res.sendStatus(204)
-
 })
 
 securityRouter.delete('/devices/:deviceId', async (req: Request, res: Response) => {
-
   const refreshToken = req.cookies.refreshToken
 
   if (!refreshToken) {
@@ -50,6 +48,4 @@ securityRouter.delete('/devices/:deviceId', async (req: Request, res: Response) 
   const result = await securityService.deleteOneSession(refreshToken, req.params.deviceId)
 
   result ? res.status(204).send(result) : res.sendStatus(result || 400)
-
-
 })

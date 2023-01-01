@@ -1,5 +1,5 @@
-import {NextFunction, Request, Response} from "express";
-import {requestLogService} from "../02.domain/requestLog-service";
+import { NextFunction, Request, Response } from 'express'
+import { requestLogService } from '../02.domain/requestLog-service'
 
 export const hotLog: any = {}
 export const loggerMW = async (req: Request, res: Response, next: NextFunction) => {
@@ -9,7 +9,7 @@ export const loggerMW = async (req: Request, res: Response, next: NextFunction) 
   const ip = req.ip
   const url = req.originalUrl || req.baseUrl
   const date = new Date().getTime()
-  await requestLogService.saveRequest({ip, url, date, method, body, params})
+  await requestLogService.saveRequest({ ip, url, date, method, body, params })
   if (!hotLog[ip]) hotLog[ip] = {}
   if (!hotLog[ip][url]) hotLog[ip][url] = {}
   if (!hotLog[ip][url][method]) hotLog[ip][url][method] = []

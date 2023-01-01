@@ -1,7 +1,7 @@
-import {ObjectId} from "mongodb";
+import { ObjectId } from 'mongodb'
 
 export class UserDBType {
-  constructor(
+  constructor (
     public _id: ObjectId,
     public userName: string,
     public bio: string,
@@ -11,7 +11,7 @@ export class UserDBType {
   }
 }
 
-export type AvatarsDBType = {
+export interface AvatarsDBType {
   src: string
   addedAt: Date
 }

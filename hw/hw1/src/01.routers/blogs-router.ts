@@ -1,20 +1,18 @@
-import { Request, Response, Router } from "express"
-import { vCEBlog, vCEPost } from "../validators/validators";
-import { authValidationMiddleware, inputValidationMiddleware } from "../middlewares/input-validation-midleware";
-import { blogsService } from "../02.domain/blogs-service";
-import { blogsRepository } from "../03.repositories/blogs-repository";
-import { postsRepository } from "../03.repositories/posts-repository";
-
+import { Request, Response, Router } from 'express'
+import { vCEBlog, vCEPost } from '../validators/validators'
+import { authValidationMiddleware, inputValidationMiddleware } from '../middlewares/input-validation-midleware'
+import { blogsService } from '../02.domain/blogs-service'
+import { blogsRepository } from '../03.repositories/blogs-repository'
+import { postsRepository } from '../03.repositories/posts-repository'
 
 export const blogsRouter = Router({})
 blogsRouter.get('/', async (req: Request, res: Response) => {
-
   const query = {
     searchNameTerm: req.query.searchNameTerm?.toString().toLowerCase() || null,
     sortBy: req.query.sortBy?.toString() || 'createdAt',
     sortDirection: req.query.sortDirection?.toString() || 'desc',
     pageNumber: +(req.query.pageNumber || 1),
-    pageSize: +(req.query.pageSize || 10),
+    pageSize: +(req.query.pageSize || 10)
   }
   res.send(await blogsRepository.getAll(query))
 })
@@ -25,7 +23,7 @@ blogsRouter.post('/', vCEBlog, authValidationMiddleware, inputValidationMiddlewa
   })
 blogsRouter.get('/:id', async (req: Request, res: Response) => {
   const product = await blogsRepository.getOne(req.params.id)
-  res.send(product || 404)
+  res.send((product != null) || 404)
 })
 blogsRouter.put('/:id', vCEBlog, authValidationMiddleware, inputValidationMiddleware,
   async (req: Request, res: Response) => {
@@ -39,12 +37,12 @@ blogsRouter.delete('/:id', vCEBlog, authValidationMiddleware,
 blogsRouter.get('/:blogId/posts',
   async (req: Request, res: Response) => {
     const posts = await blogsService.getPostsByBlog(req.query, req.params.blogId)
-    res.send(posts || 404)
+    res.send((posts != null) || 404)
   })
 blogsRouter.post('/:blogId/posts', vCEPost, authValidationMiddleware, inputValidationMiddleware,
   async (req: Request, res: Response) => {
     const blog = await blogsRepository.getOne(req.params.blogId)
-    if (!blog) {
+    if (blog == null) {
       return res.send(404)
     }
     res.status(201).send(await postsRepository.create({

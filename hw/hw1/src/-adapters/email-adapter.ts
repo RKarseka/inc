@@ -1,16 +1,16 @@
 import nodemailer from 'nodemailer'
-import {emailObject} from "../-managers/email-manager";
+import { emailObject } from '../-managers/email-manager'
 
 const emailConfig = {
   service: 'gmail',
   auth: {
     user: 'ramaninc8@gmail.com',
-    pass: 'fxjg mhse oppv terd',
+    pass: 'fxjg mhse oppv terd'
   }
 }
 
 export const emailAdapter = {
-  async sendEmail(emailObject: emailObject) {
+  async sendEmail (emailObject: emailObject) {
     const transporter = nodemailer.createTransport(emailConfig)
     return await transporter.sendMail(emailObject)
   }
@@ -24,4 +24,4 @@ export const emailAdapter = {
   subject: subject, // Subject line
   text: 'Hello world?', // plain text body
   html: massage // html body
-}*/
+} */

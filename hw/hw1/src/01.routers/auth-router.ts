@@ -1,30 +1,29 @@
-import {Request, Response, Router} from "express";
-import {vACode, vAPasswordRecovery, vCEmail, vCUser, vLogin} from "../validators/validators";
-import {inputValidationMiddleware} from "../middlewares/input-validation-midleware";
-import {authService} from "../02.domain/auth-service";
-import {authMiddleware} from "../middlewares/auth-middleware";
-import {IUserWithConfirmation, usersService} from "../02.domain/users-service";
-import {emailManager} from "../-managers/email-manager";
-import {emailAdapter} from "../-adapters/email-adapter";
-import {makeError} from "../validators/helper";
-import {loggerMW} from "../middlewares/logger-middleware";
+import { Request, Response, Router } from 'express'
+import { vACode, vAPasswordRecovery, vCEmail, vCUser, vLogin } from '../validators/validators'
+import { inputValidationMiddleware } from '../middlewares/input-validation-midleware'
+import { authService } from '../02.domain/auth-service'
+import { authMiddleware } from '../middlewares/auth-middleware'
+import { IUserWithConfirmation, usersService } from '../02.domain/users-service'
+import { emailManager } from '../-managers/email-manager'
+import { emailAdapter } from '../-adapters/email-adapter'
+import { makeError } from '../validators/helper'
+import { loggerMW } from '../middlewares/logger-middleware'
 
 export const authRouter = Router({})
 
 authRouter.post('/login', loggerMW, async (req: Request, res: Response) => {
-    const {loginOrEmail, password} = req.body
+  const { loginOrEmail, password } = req.body
 
-    const tokens = await authService.loginUser(loginOrEmail, password, req.ip)
+  const tokens = await authService.loginUser(loginOrEmail, password, req.ip)
 
-    if (!tokens) {
-      res.sendStatus(401)
-      return
-    }
-    const {accessToken, refreshToken} = tokens
-    res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true,})
-    res.send({accessToken})
-
+  if (!tokens) {
+    res.sendStatus(401)
+    return
   }
+  const { accessToken, refreshToken } = tokens
+  res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true })
+  res.send({ accessToken })
+}
 )
 
 authRouter.post('/refresh-token', async (req: Request, res: Response) => {
@@ -42,9 +41,9 @@ authRouter.post('/refresh-token', async (req: Request, res: Response) => {
     return
   }
 
-  const {accessToken, refreshToken} = tokens
-  res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true,})
-  res.send({accessToken})
+  const { accessToken, refreshToken } = tokens
+  res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true })
+  res.send({ accessToken })
 })
 
 authRouter.post('/registration', loggerMW, vCUser, inputValidationMiddleware, async (req: Request, res: Response) => {
@@ -64,7 +63,7 @@ authRouter.post('/registration', loggerMW, vCUser, inputValidationMiddleware, as
 
 authRouter.post('/registration-confirmation', loggerMW, vACode, inputValidationMiddleware, async (req: Request, res: Response) => {
   const user = await usersService.getUserByCode<IUserWithConfirmation>(req.body.code)
-  if (!user || user.isConfirmed) {
+  if ((user == null) || user.isConfirmed) {
     res.status(400).send(makeError('code'))
     return
   }
@@ -76,13 +75,13 @@ authRouter.post('/registration-confirmation', loggerMW, vACode, inputValidationM
 
 authRouter.post('/registration-email-resending', loggerMW, vCEmail, inputValidationMiddleware, async (req: Request, res: Response) => {
   const user = await usersService.getUserByEmail<IUserWithConfirmation>(req.body.email)
-  if (!user || user.isConfirmed) {
+  if ((user == null) || user.isConfirmed) {
     res.status(400).send(makeError('email'))
     return
   }
   const confirmationCode = new Date().toISOString()
 
-  const updateUserResult = await usersService.updateUser(user.id, {...user, confirmationCode})
+  const updateUserResult = await usersService.updateUser(user.id, { ...user, confirmationCode })
 
   if (!updateUserResult) {
     res.sendStatus(400)
@@ -105,7 +104,6 @@ authRouter.post('/logout', async (req: Request, res: Response) => {
 
   const logout = await authService.logoutUser(refreshToken)
   logout ? res.sendStatus(204) : exitFn()
-
 })
 
 authRouter.post('/password-recovery', loggerMW, vCEmail, inputValidationMiddleware, async (req: Request, res: Response) => {
@@ -128,4 +126,3 @@ authRouter.post('/new-password', loggerMW, vAPasswordRecovery, inputValidationMi
 authRouter.get('/me', authMiddleware, async (req: Request, res: Response) => {
   res.send(req.user)
 })
-

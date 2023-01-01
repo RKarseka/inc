@@ -1,42 +1,41 @@
-import { blogsCollection } from "./db";
-import { ObjectId } from "mongodb";
+import { blogsCollection } from './db'
+import { ObjectId } from 'mongodb'
 
 export interface IBlog {
-  id: string,
-  name: string,
-  description: string,
-  websiteUrl: string,
-  createdAt: string,
+  id: string
+  name: string
+  description: string
+  websiteUrl: string
+  createdAt: string
   isMembership: boolean
 }
 
 interface getParams {
-  searchNameTerm: string | null,
-  sortBy: string,
-  sortDirection: string,
-  pageNumber: number,
+  searchNameTerm: string | null
+  sortBy: string
+  sortDirection: string
+  pageNumber: number
   pageSize: number
 }
 export const blogsRepository = {
-  async getAll({searchNameTerm, sortBy, sortDirection, pageNumber, pageSize}: getParams) {
-
-    //*todo #any
+  async getAll ({ searchNameTerm, sortBy, sortDirection, pageNumber, pageSize }: getParams) {
+    //* todo #any
     const sort: any = {}
     sort[sortBy] = sortDirection === 'asc' ? 1 : -1
     if (!sort.createdAt) {
       sort.createdAt = sortDirection === 'asc' ? 1 : -1
     }
     const skip = (pageNumber - 1) * pageSize
-    //*todo #any
+    //* todo #any
     const filter: any = {}
     if (searchNameTerm) {
-      filter.name = {$regex: new RegExp(searchNameTerm, "i")}
+      filter.name = { $regex: new RegExp(searchNameTerm, 'i') }
     }
     const totalCount = await blogsCollection.countDocuments(filter)
     const items =
       await blogsCollection
         .find(filter)
-        .project({_id: 0})
+        .project({ _id: 0 })
         .sort(sort)
         .limit(pageSize)
         .skip(skip)
@@ -50,7 +49,7 @@ export const blogsRepository = {
       items
     }
   },
-  async create({name, description, websiteUrl}: IBlog): Promise<IBlog> {
+  async create ({ name, description, websiteUrl }: IBlog): Promise<IBlog> {
     const newBlog = {
       id: new ObjectId() + '',
       name,
@@ -69,15 +68,15 @@ export const blogsRepository = {
       isMembership: newBlog.isMembership
     }
   },
-  async getOne(id: string): Promise<IBlog | null> {
-    return await blogsCollection.findOne({id}, {projection: {_id: 0}})
+  async getOne (id: string): Promise<IBlog | null> {
+    return await blogsCollection.findOne({ id }, { projection: { _id: 0 } })
   },
-  async editOne(id: string, newBlog: IBlog): Promise<boolean> {
-    const result = await blogsCollection.updateOne({id}, {$set: newBlog})
+  async editOne (id: string, newBlog: IBlog): Promise<boolean> {
+    const result = await blogsCollection.updateOne({ id }, { $set: newBlog })
     return !!result.matchedCount
   },
-  async deleteOne(id: string): Promise<boolean> {
-    const result = await blogsCollection.deleteOne({id})
+  async deleteOne (id: string): Promise<boolean> {
+    const result = await blogsCollection.deleteOne({ id })
     return !!result.deletedCount
   }
 }

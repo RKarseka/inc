@@ -1,2 +1,2 @@
-export const authRepository={
+export const authRepository = {
 }

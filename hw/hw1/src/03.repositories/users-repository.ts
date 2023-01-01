@@ -1,12 +1,10 @@
-import {usersCollection} from "./db"
-import {IUser} from "../02.domain/users-service"
+import {usersCollection} from './db'
+import {IUser} from '../02.domain/users-service'
 
-class UsersRepository {
-
+export class UsersRepository {
   async insertOne(newUser: IUser) {
     const res = await usersCollection.insertOne(newUser)
-    //@todo
-    return
+    // @todo
   }
 
   async deleteOne(id: string) {

@@ -1,19 +1,19 @@
-import {app} from "../config";
+import { app } from '../config'
 
 export interface emailObject {
-  from: string,
-  to: string,
-  subject: string,
-  text?: string,
+  from: string
+  to: string
+  subject: string
+  text?: string
   html?: string
 }
 
 export const emailManager = {
-  async sendEmailRecoveryMessage() {
+  async sendEmailRecoveryMessage () {
 
   },
 
-  makeRegistrationConfirmationEmail(to: string, code: string = 'code'): emailObject {
+  makeRegistrationConfirmationEmail (to: string, code: string = 'code'): emailObject {
     const subject = ' Registration confirmation'
     const html =
       ` <h1>Thanks for your registration</h1>
@@ -29,7 +29,7 @@ export const emailManager = {
     }
   },
 
-  makeRecoveryPasswordEmail(to: string, code: string = 'code'): emailObject {
+  makeRecoveryPasswordEmail (to: string, code: string = 'code'): emailObject {
     const subject = ' Registration confirmation'
     const html =
       ` <h1>Password recovery</h1>
@@ -45,5 +45,3 @@ export const emailManager = {
     }
   }
 }
-
-

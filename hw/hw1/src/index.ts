@@ -1,18 +1,15 @@
 import express from 'express'
 import bodyParser from 'body-parser'
-import {blogsRouter} from './01.routers/blogs-router'
-import {testingRouter} from './01.routers/reset-router'
-import {runDb} from './03.repositories/db'
-import {postsRouter} from './01.routers/posts-router'
-import {usersRouter} from './01.routers/users-router'
-import {authRouter} from './01.routers/auth-router'
-import {commentsRouter} from './01.routers/comments-router'
-import {emailRouter} from './01.routers/email-router'
-import cookieParser from "cookie-parser";
-import {securityRouter} from "./01.routers/security-router";
-
-
-
+import { blogsRouter } from './01.routers/blogs-router'
+import { testingRouter } from './01.routers/reset-router'
+import { runDb } from './03.repositories/db'
+import { postsRouter } from './01.routers/posts-router'
+import { usersRouter } from './01.routers/users-router'
+import { authRouter } from './01.routers/auth-router'
+import { commentsRouter } from './01.routers/comments-router'
+import { emailRouter } from './01.routers/email-router'
+import cookieParser from 'cookie-parser'
+import { securityRouter } from './01.routers/security-router'
 
 const port = 3000
 const app = express()

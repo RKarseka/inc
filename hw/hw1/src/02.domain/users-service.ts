@@ -1,62 +1,59 @@
-import bcrypt from "bcrypt"
-import {ISearchFields, makeGetAllParams} from "../helpers/helpers";
-import {ObjectId} from "mongodb";
-import {usersRepository} from "../03.repositories/users-repository";
-import {ParsedQs} from "qs";
-import {abstractRepository, mapFnDef} from "../03.repositories/abstract-repository";
-import {usersCollection} from "../03.repositories/db";
-import {bcryptService} from "../-application/bcrypt-service";
-import {UserDBType} from "../types/types";
+import { ISearchFields, makeGetAllParams } from '../helpers/helpers'
+import { ObjectId } from 'mongodb'
+import { usersRepository } from '../03.repositories/users-repository'
+import { ParsedQs } from 'qs'
+import { abstractRepository, mapFnDef } from '../03.repositories/abstract-repository'
+import { usersCollection } from '../03.repositories/db'
+import { bcryptService } from '../-application/bcrypt-service'
+import { UserDBType } from '../types/types'
 
 export interface IUserShort {
-  userId: string,
-  login: string,
-  email: string,
+  userId: string
+  login: string
+  email: string
 }
 
 export interface IUser {
-  id: string,
-  login: string,
-  email: string,
-  createdAt: string,
-  passwordHash: string,
+  id: string
+  login: string
+  email: string
+  createdAt: string
+  passwordHash: string
 }
 
 export interface IUserWithConfirmation extends IUser {
-  isConfirmed: string,
-  confirmationCode: string,
-  refreshToken?: string,
+  isConfirmed: string
+  confirmationCode: string
+  refreshToken?: string
   recoveryCode?: string
 }
 
-type IUserSecure = Omit<IUser, "passwordHash">
-export type IUserMe = Omit<IUserSecure, "createdAt">
+type IUserSecure = Omit<IUser, 'passwordHash'>
+export type IUserMe = Omit<IUserSecure, 'createdAt'>
 
 interface ICreateUserParams {
-  login: string,
-  password: string,
+  login: string
+  password: string
   email: string
 }
 
 class UserService {
-
-  async getAllUsers(query: ParsedQs) {
-    const searchFields: ISearchFields<IUserSecure>[] = [
-      {name: 'login', query: 'searchLoginTerm'},
-      {name: 'email', query: 'searchEmailTerm'}
+  async getAllUsers (query: ParsedQs) {
+    const searchFields: Array<ISearchFields<IUserSecure>> = [
+      { name: 'login', query: 'searchLoginTerm' },
+      { name: 'email', query: 'searchEmailTerm' }
     ]
     const params = makeGetAllParams<IUserSecure>(query, searchFields)
-    const mapFn = ({id, login, email, createdAt}: IUserSecure): IUserSecure => ({id, login, email, createdAt})
+    const mapFn = ({ id, login, email, createdAt }: IUserSecure): IUserSecure => ({ id, login, email, createdAt })
     return await abstractRepository.getAllFromCollectionPaginated<IUserSecure>(params, usersCollection, mapFn)
   }
 
-  async updateUser(filterValue: string, user: {}, filter = 'id') {
+  async updateUser (filterValue: string, user: {}, filter = 'id') {
     return await abstractRepository.updateOne(filterValue, user, usersCollection, filter)
   }
 
-  async getUserById(id: string, mapFn = mapFnDef<IUserMe, IUserShort>) {
+  async getUserById (id: string, mapFn = mapFnDef<IUserMe, IUserShort>) {
     return await abstractRepository.getOne<IUserWithConfirmation>(id, usersCollection, mapFn)
-
   }
 
   async getUserByEmail<T>(email: string, mapFn = mapFnDef<T, T>): Promise<T | null> {
@@ -75,16 +72,16 @@ class UserService {
     return await abstractRepository.getOne(filterValue, usersCollection, mapFn, filter)
   }
 
-  async createUser({login, password, email}: ICreateUserParams, isConfirmed = false) {
+  async createUser ({ login, password, email }: ICreateUserParams, isConfirmed = false) {
     const passwordHash = await bcryptService.makePasswordHash(password)
 
     const newUserByClass = new UserDBType(new ObjectId(), login, '', new Date(), [])
 
     const newUser = {
       id: new ObjectId() + '',
-      login: login,
-      password: password,
-      email: email,
+      login,
+      password,
+      email,
       createdAt: new Date().toISOString(),
       passwordHash,
       isConfirmed,
@@ -100,17 +97,17 @@ class UserService {
     }
   }
 
-  async setEmailConfirmationForUserByCode(user: IUserWithConfirmation) {
+  async setEmailConfirmationForUserByCode (user: IUserWithConfirmation) {
     return await abstractRepository
       .updateOne(
         user.confirmationCode,
-        {...user, isConfirmed: true, confirmationCode: null},
+        { ...user, isConfirmed: true, confirmationCode: null },
         usersCollection,
         'confirmationCode'
       )
   }
 
-  async deleteUser(id: string) {
+  async deleteUser (id: string) {
     return await usersRepository.deleteOne(id)
   }
 }

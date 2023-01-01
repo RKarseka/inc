@@ -1,16 +1,16 @@
-import {Collection, MongoClient} from "mongodb"
+import { Collection, MongoClient } from 'mongodb'
 import * as dotenv from 'dotenv'
-import {IBlog} from "./blogs-repository";
-import {IPost} from "../02.domain/posts-service";
-import {IUser} from "../02.domain/users-service";
-import {IComment} from "../02.domain/comments-service";
-import {IUserSessionData} from "../02.domain/security-service";
-import {IRequestInfoLog} from "../02.domain/requestLog-service";
+import { IBlog } from './blogs-repository'
+import { IPost } from '../02.domain/posts-service'
+import { IUser } from '../02.domain/users-service'
+import { IComment } from '../02.domain/comments-service'
+import { IUserSessionData } from '../02.domain/security-service'
+import { IRequestInfoLog } from '../02.domain/requestLog-service'
 
 dotenv.config()
 
-export type ProductType = {
-  id: number,
+export interface ProductType {
+  id: number
   title: string
 }
 
@@ -29,10 +29,10 @@ export const commentsCollection = db.collection<IComment>('comments')
 export const usersSessionsCollection: Collection<IUserSessionData> = db.collection<IUserSessionData>('usersSessions')
 export const requestsInfoLogCollection = db.collection<IRequestInfoLog>('requestsInfoLog')
 
-export async function runDb() {
+export async function runDb () {
   try {
     await client.connect()
-    await client.db("products").command({ping: 1})
+    await client.db('products').command({ ping: 1 })
     console.log('Connected successfully to mongo server')
   } catch {
     console.log('Can`t connect to db')

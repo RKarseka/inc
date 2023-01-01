@@ -1,4 +1,4 @@
-import { UserDBType } from "../domain/user-service";
+import { UserDBType } from '../domain/user-service'
 
 declare global {
   declare namespace Express {
@@ -15,4 +15,3 @@ declare global {
     }
   }
 }
-
