@@ -5,8 +5,8 @@ import {differenceInSeconds} from "date-fns";
 export const hotLog: any = {}
 export const loggerMW = async (req: Request, res: Response, next: NextFunction) => {
   const method = req.method
-  const body = req.body.toString()
-  const params = req.params.toString()
+  const body = JSON.stringify(req.body)
+  const params = JSON.stringify(req.params)
   const ip = req.ip
   const url = req.originalUrl || req.baseUrl
   const date = new Date().getTime()
