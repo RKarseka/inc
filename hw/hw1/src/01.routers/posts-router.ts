@@ -20,10 +20,7 @@ postsRouter.post('/', vBlogID, vCEPost, authValidationMiddleware, inputValidatio
     if (blog == null) {
       return res.send(404)
     }
-    res.status(201).send(await postsRepository.create({
-      ...req.body,
-      blogName: blog.name
-    }))
+    res.send(await postsService.createPost(req.user.userId, {...req.body, blogId: blog.name, blogName: blog.name}))
   }
 )
 
@@ -38,7 +35,7 @@ postsRouter.put('/:id', vBlogID, vCEPost, authValidationMiddleware, inputValidat
     res.send(newBlog ? 204 : 404)
   })
 
-postsRouter.put('/:id/like-status',  authValidationMiddleware, inputValidationMiddleware,
+postsRouter.put('/:id/like-status', authValidationMiddleware, inputValidationMiddleware,
   async (req: Request, res: Response) => {
     res.sendStatus(await postsService.setPostLike(req.params.id, req.body, req.user.userId))
   })

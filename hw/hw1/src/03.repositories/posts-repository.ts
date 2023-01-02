@@ -23,8 +23,7 @@ export const postsRepository = {
   },
 
   async getOne(id: string) {
-    const item = await postsCollection.findOne({id})
-    return (item != null) ? mapIPost(item) : item
+    return await postsCollection.findOne({id})
   },
   async editOne(id: string, newBlog: IPost): Promise<boolean> {
     const result = await postsCollection.updateOne({id}, {$set: newBlog})
