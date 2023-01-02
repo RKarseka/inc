@@ -54,8 +54,7 @@ export const abstractRepository = {
   },
 
   //@todo 2help
-  //@ts-ignore
-  async deleteMany<T>(filter: Filter<T>, collection: Collection<T>) {
+  async deleteMany<T extends Document>(filter: Filter<T>, collection: Collection<T>) {
     const result = await collection.deleteMany(filter)
     return !!result.deletedCount
   },

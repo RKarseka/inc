@@ -109,12 +109,7 @@ authRouter.post('/logout', async (req: Request, res: Response) => {
 })
 
 authRouter.post('/password-recovery', loggerMW, vCEmail, inputValidationMiddleware, async (req: Request, res: Response) => {
-  const result = await authService.sendRecoveryCode(req.body.email)
-
-  if (!result) {
-    res.status(400).send(makeError('email'))
-    return
-  }
+  await authService.sendRecoveryCode(req.body.email)
 
   res.sendStatus(204)
 })
