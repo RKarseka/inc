@@ -24,9 +24,9 @@ postsRouter.post('/', vBlogID, vCEPost, authValidationMiddleware, inputValidatio
   }
 )
 
-postsRouter.get('/:id', async (req: Request, res: Response) => {
-  const product = await postsRepository.getOne(req.params.id)
-  res.send((product != null) || 404)
+postsRouter.get('/:id',checkAuthorizationMiddleware, async (req: Request, res: Response) => {
+  const product = await postsService.getOnePost(req.params.id, req.user.userId)
+  res.send(product || 404)
 })
 
 postsRouter.put('/:id', vBlogID, vCEPost, authValidationMiddleware, inputValidationMiddleware,

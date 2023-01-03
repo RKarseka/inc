@@ -125,6 +125,7 @@ export const postsService = {
   async getOnePost(id: string, userId: string): Promise<IPost | null> {
     return await abstractRepository.getOne<IPost>(id, postsCollection, mapFnForPost(userId))
   },
+
   async getAllPosts(query: ParsedQs) {
     const searchFields: Array<ISearchFields<IPost>> = []
     const params = makeGetAllParams(query, searchFields)

@@ -1,6 +1,7 @@
 import { usersCollection } from './db'
 import { IUser } from '../02.domain/users-service'
 import { injectable } from 'inversify'
+import "reflect-metadata"
 
 @injectable()
 export class UsersRepository {

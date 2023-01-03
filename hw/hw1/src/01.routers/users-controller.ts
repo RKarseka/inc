@@ -1,11 +1,10 @@
-import { UserService } from '../02.domain/users-service'
+import {UserService, usersService} from '../02.domain/users-service'
 import { Request, Response } from 'express'
 import { injectable } from 'inversify'
 
 @injectable()
 export class UsersController {
   constructor (protected usersService: UserService) {
-
   }
 
   async getAllUsers (req: Request, res: Response) {
@@ -22,5 +21,9 @@ export class UsersController {
 
   async deleteUser (req: Request, res: Response) {
     res.send(await this.usersService.deleteUser(req.params.id) ? 204 : 404)
+  }
+
+  async systemUser (req: Request, res: Response) {
+    res.send(  await usersService.createUser({login: 'user', password: 'user', email: 'email'}) ? 204 : 404)
   }
 }

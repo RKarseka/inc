@@ -1,4 +1,4 @@
-import { Request, Response, Router } from 'express'
+import {Request, Response, Router} from 'express'
 import {
   blogsCollection,
   commentsCollection,
@@ -6,6 +6,7 @@ import {
   usersCollection,
   usersSessionsCollection
 } from '../03.repositories/db'
+import {usersService} from "../02.domain/users-service";
 
 export const testingRouter = Router({})
 testingRouter.delete('/all-data', async (req: Request, res: Response) => {
@@ -15,4 +16,5 @@ testingRouter.delete('/all-data', async (req: Request, res: Response) => {
   await commentsCollection.deleteMany({})
   await usersSessionsCollection.deleteMany({})
   res.sendStatus(204)
+  await usersService.createUser({login: 'user', password: 'user', email: 'email'})
 })
