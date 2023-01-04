@@ -1,6 +1,6 @@
 import {Request, Response, Router} from 'express'
 import {authValidationMiddleware, inputValidationMiddleware} from '../middlewares/input-validation-midleware'
-import {vBlogID, vCEComment, vCEPost} from '../validators/validators'
+import {vAuth, vBlogID, vCEComment, vCEPost} from '../validators/validators'
 import {blogsRepository} from '../03.repositories/blogs-repository'
 import {postsRepository} from '../03.repositories/posts-repository'
 import {postsService} from '../02.domain/posts-service'
@@ -29,7 +29,7 @@ postsRouter.get('/:id',checkAuthorizationMiddleware, async (req: Request, res: R
   res.send(product || 404)
 })
 
-postsRouter.put('/:id', vBlogID, vCEPost, authValidationMiddleware, inputValidationMiddleware,
+postsRouter.put('/:id', vBlogID, vCEPost, vAuth, inputValidationMiddleware,
   async (req: Request, res: Response) => {
     const newBlog = await postsRepository.editOne(req.params.id, req.body)
     res.send(newBlog ? 204 : 404)
