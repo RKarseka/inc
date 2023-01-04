@@ -6,6 +6,7 @@ import {abstractRepository, mapFnDef} from '../03.repositories/abstract-reposito
 import {usersCollection} from '../03.repositories/db'
 import {bcryptService} from '../-application/bcrypt-service'
 import {UserDBType} from '../types/types'
+import {usersRepository} from "../composition-root";
 
 export interface IUserShort {
   userId: string
@@ -38,10 +39,8 @@ interface ICreateUserParams {
 }
 
 export class UserService {
-  usersRepository: UsersRepository
 
-  constructor() {
-    this.usersRepository = new UsersRepository()
+  constructor(protected usersRepository: UsersRepository) {
   }
 
   async getAllUsers(query: ParsedQs) {
@@ -118,4 +117,4 @@ export class UserService {
   }
 }
 
-export const usersService = new UserService()
+export const usersService = new UserService(usersRepository)
