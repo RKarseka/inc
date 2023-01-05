@@ -37,7 +37,6 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
   next()
 }
 
-
 export const checkAuthorizationMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   req.user = await checkAuthorization(req)
   next()
