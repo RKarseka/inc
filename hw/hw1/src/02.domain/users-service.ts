@@ -1,12 +1,12 @@
-import {ISearchFields, makeGetAllParams} from '../helpers/helpers'
-import {ObjectId} from 'mongodb'
-import {UsersRepository} from '../03.repositories/users-repository'
-import {ParsedQs} from 'qs'
-import {abstractRepository, mapFnDef} from '../03.repositories/abstract-repository'
-import {usersCollection} from '../03.repositories/db'
-import {bcryptService} from '../-application/bcrypt-service'
-import {UserDBType} from '../types/types'
-import {usersRepository} from "../composition-root";
+import { ISearchFields, makeGetAllParams } from '../helpers/helpers'
+import { ObjectId } from 'mongodb'
+import { UsersRepository } from '../03.repositories/users-repository'
+import { ParsedQs } from 'qs'
+import { abstractRepository, mapFnDef } from '../03.repositories/abstract-repository'
+import { usersCollection } from '../03.repositories/db'
+import { bcryptService } from '../-application/bcrypt-service'
+import { UserDBType } from '../types/types'
+import { injectable } from 'inversify'
 
 export interface IUserShort {
   userId: string
@@ -38,26 +38,26 @@ interface ICreateUserParams {
   email: string
 }
 
+@injectable()
 export class UserService {
-
-  constructor(protected usersRepository: UsersRepository) {
+  constructor (protected usersRepository: UsersRepository) {
   }
 
-  async getAllUsers(query: ParsedQs) {
+  async getAllUsers (query: ParsedQs) {
     const searchFields: Array<ISearchFields<IUserSecure>> = [
-      {name: 'login', query: 'searchLoginTerm'},
-      {name: 'email', query: 'searchEmailTerm'}
+      { name: 'login', query: 'searchLoginTerm' },
+      { name: 'email', query: 'searchEmailTerm' }
     ]
     const params = makeGetAllParams<IUserSecure>(query, searchFields)
-    const mapFn = ({id, login, email, createdAt}: IUserSecure): IUserSecure => ({id, login, email, createdAt})
+    const mapFn = ({ id, login, email, createdAt }: IUserSecure): IUserSecure => ({ id, login, email, createdAt })
     return await abstractRepository.getAllFromCollectionPaginated<IUserSecure>(params, usersCollection, mapFn)
   }
 
-  async updateUser(filterValue: string, user: {}, filter = 'id') {
+  async updateUser (filterValue: string, user: {}, filter = 'id') {
     return await abstractRepository.updateOne(filterValue, user, usersCollection, filter)
   }
 
-  async getUserById(id: string, mapFn = mapFnDef<IUserMe, IUserShort>) {
+  async getUserById (id: string, mapFn = mapFnDef<IUserMe, IUserShort>) {
     return await abstractRepository.getOne<IUserWithConfirmation>(id, usersCollection, mapFn)
   }
 
@@ -77,7 +77,7 @@ export class UserService {
     return await abstractRepository.getOne(filterValue, usersCollection, mapFn, filter)
   }
 
-  async createUser({login, password, email}: ICreateUserParams, isConfirmed = false) {
+  async createUser ({ login, password, email }: ICreateUserParams, isConfirmed = false) {
     const passwordHash = await bcryptService.makePasswordHash(password)
 
     const newUserByClass = new UserDBType(new ObjectId(), login, '', new Date(), [])
@@ -102,19 +102,19 @@ export class UserService {
     }
   }
 
-  async setEmailConfirmationForUserByCode(user: IUserWithConfirmation) {
+  async setEmailConfirmationForUserByCode (user: IUserWithConfirmation) {
     return await abstractRepository
       .updateOne(
         user.confirmationCode,
-        {...user, isConfirmed: true, confirmationCode: null},
+        { ...user, isConfirmed: true, confirmationCode: null },
         usersCollection,
         'confirmationCode'
       )
   }
 
-  async deleteUser(id: string) {
+  async deleteUser (id: string) {
     return await this.usersRepository.deleteOne(id)
   }
 }
 
-export const usersService = new UserService(usersRepository)
+export const usersService = new UserService(new UsersRepository())
