@@ -20,11 +20,11 @@ postsRouter.post('/', vBlogID, vCEPost, authValidationMiddleware, inputValidatio
     if (blog == null) {
       return res.send(404)
     }
-    res.send(await postsService.createPost(req.user.userId, {...req.body, blogId: blog.name, blogName: blog.name}))
+    res.send(await postsService.createPost({...req.body, blogId: blog.name, blogName: blog.name}))
   }
 )
 
-postsRouter.get('/:id',checkAuthorizationMiddleware, async (req: Request, res: Response) => {
+postsRouter.get('/:id', checkAuthorizationMiddleware, async (req: Request, res: Response) => {
   const product = await postsService.getOnePost(req.params.id, req.user.userId)
   res.send(product || 404)
 })
