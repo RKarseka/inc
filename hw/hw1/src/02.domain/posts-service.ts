@@ -133,7 +133,7 @@ export const postsService = {
   },
   async createPost(rawPost: IPostRaw) {
     const post = await postsRepository.create(rawPost)
-    return post ? mapFnForPost('userId')(post) : 400
+    return post && mapFnForPost('userId')(post)
   }
 }
 
