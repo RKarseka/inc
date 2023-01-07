@@ -8,6 +8,7 @@ import {abstractRepository} from '../03.repositories/abstract-repository'
 import {IComment, ICommentFormatted, TLikeStatus} from "./comments-service";
 import {IUser, IUserShort} from "./users-service";
 import {ObjectId} from "mongodb";
+import {compareAsc} from "date-fns";
 
 type TLike = {
   addedAt: string
@@ -72,7 +73,9 @@ const mapFnForPost = (userId: string) => {
     const myStatus =
       isMyLike(userId, post.likes) && 'Like' ||
       isMyLike(userId, post.dislikes) && 'Dislike' || 'None'
-    const newestLikes = []
+    const newestLikes = [...likes.slice(-3), ...dislikes.slice(-3)]
+      .sort((d1, d2) => compareAsc(new Date(d1.addedAt), new Date(d2.addedAt)))
+      .slice(3)
     return {
       id,
       title,
@@ -96,7 +99,7 @@ export const postsService = {
   async setPostLike(id: string, body: ParsedQs, {userId, login}: IUserShort) {
     const newLike = () => ({userId, login, addedAt: new Date().toISOString()})
     const likeStatus = body.likeStatus as TLikeStatus
-    const post = await abstractRepository.getOne<IPost>(id, postsRepository)
+    const post = await abstractRepository.getOne<IPost>(id, postsCollection)
     if (!post) return 404
 
 
@@ -117,7 +120,7 @@ export const postsService = {
       post.dislikes.push(newLike())
     }
 
-    const result = await abstractRepository.updateOne(id, post, commentsCollection)
+    const result = await abstractRepository.updateOne(id, post, postsCollection)
     return result ? 204 : 404
 
 

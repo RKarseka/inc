@@ -22,7 +22,6 @@ export const checkAuthorization = async (req: Request): Promise<IUserShort> => {
   if (!foundUser) {
     return emptyUser
   }
-
   return foundUser
 }
 

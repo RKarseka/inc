@@ -41,7 +41,7 @@ postsRouter.put('/:id', vBlogID, vCEPost, vAuth, inputValidationMiddleware,
     res.send(newBlog ? 204 : 404)
   })
 
-postsRouter.put('/:id/like-status', authValidationMiddleware, inputValidationMiddleware,
+postsRouter.put('/:id/like-status', authMiddleware, inputValidationMiddleware,
   async (req: Request, res: Response) => {
     res.sendStatus(await postsService.setPostLike(req.params.id, req.body, req.user.userId))
   })
