@@ -43,7 +43,7 @@ postsRouter.put('/:id', vBlogID, vCEPost, vAuth, inputValidationMiddleware,
 
 postsRouter.put('/:id/like-status', authMiddleware, inputValidationMiddleware,
   async (req: Request, res: Response) => {
-    res.sendStatus(await postsService.setPostLike(req.params.id, req.body, req.user.userId))
+    res.sendStatus(await postsService.setPostLike(req.params.id, req.body, req.user))
   })
 postsRouter.delete('/:id', vCEPost, authValidationMiddleware,
   async (req: Request, res: Response) => {
