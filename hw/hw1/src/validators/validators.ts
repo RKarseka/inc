@@ -14,6 +14,12 @@ export const vEComment = checkSchema({
     isLength: { options: { min: 20, max: 300 } }
   }
 })
+export const vLikeComment = checkSchema({
+  likeStatus: {
+    trim: {},
+    isIn: {options: [ 'None', 'Like', 'Dislike' ]}
+  }
+})
 export const vCEBlog = checkSchema({
   name: {
     trim: {},

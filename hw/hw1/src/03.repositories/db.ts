@@ -17,10 +17,10 @@ export interface ProductType {
 const mongoUri = process.env.MONGO_URI || 'mongodb://0.0.0.0:27017'
 const local = ['RA-PC2021-E'].includes(process.env.COMPUTERNAME || '')
 const client = new MongoClient(mongoUri)
-// export const db = client.db('guild')
+export const db = client.db('guild')
 // export const db = client.db('forIncDB')
 // export const db = client.db('secondDB')
-export const db = local ? client.db('guild') : client.db('forIncDB')
+// export const db = local ? client.db('guild') : client.db('forIncDB')
 export const videosCollection = db.collection<ProductType>('videos')
 export const postsCollection = db.collection<IPost>('posts')
 export const blogsCollection = db.collection<IBlog>('blogs')
