@@ -9,8 +9,8 @@ import {commentsService} from '../02.domain/comments-service'
 
 export const postsRouter = Router({})
 
-postsRouter.get('/', async (req: Request, res: Response) => {
-  const posts = await postsService.getAllPosts(req.query)
+postsRouter.get('/', checkAuthorizationMiddleware, async (req: Request, res: Response) => {
+  const posts = await postsService.getAllPosts(req.query, req.user.userId)
   res.send(posts)
 })
 

@@ -129,10 +129,10 @@ export const postsService = {
     return await abstractRepository.getOne<IPost>(id, postsCollection, mapFnForPost(userId))
   },
 
-  async getAllPosts(query: ParsedQs) {
+  async getAllPosts(query: ParsedQs, userId: string) {
     const searchFields: Array<ISearchFields<IPost>> = []
     const params = makeGetAllParams(query, searchFields)
-    return await abstractRepository.getAllFromCollectionPaginated<IPost>(params, postsCollection)
+    return await abstractRepository.getAllFromCollectionPaginated<IPost>(params, postsCollection, mapFnForPost(userId))
   },
 
   async createPost(rawPost: IPostRaw) {
