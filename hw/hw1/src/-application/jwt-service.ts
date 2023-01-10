@@ -1,7 +1,7 @@
-import jwt, { JwtPayload } from 'jsonwebtoken'
-import { settings } from '../settings'
-import { ObjectId } from 'mongodb'
-import { add } from 'date-fns'
+import jwt, {JwtPayload} from 'jsonwebtoken'
+import {settings} from '../settings'
+import {ObjectId} from 'mongodb'
+import {add} from 'date-fns'
 
 interface tokenPayload {
   [name: string]: string
@@ -16,43 +16,43 @@ export interface IRefreshToken {
 }
 
 export const jwtService = {
-  createJWT (payload: tokenPayload, expiresIn = '150d', secret = settings.JWT_SECRET) {
-    return jwt.sign(payload, secret, { expiresIn })
+  createJWT(payload: tokenPayload, expiresIn = '150d', secret = settings.JWT_SECRET) {
+    return jwt.sign(payload, secret, {expiresIn})
   },
 
-  generateAccessToken (userId: string, deviceId: string) {
+  generateAccessToken(userId: string, deviceId: string) {
     const secret = settings.JWT_SECRET_AT
     const expiresIn = '10d'
     // const token = JSON.stringify({userId, deviceId})
 
-    return this.createJWT({ userId, deviceId }, expiresIn, secret)
+    return this.createJWT({userId, deviceId}, expiresIn, secret)
   },
 
-  generateRefreshToken (userId: string, deviceId = new ObjectId() + '') {
+  generateRefreshToken(userId: string, deviceId = new ObjectId() + '') {
     const secret = settings.JWT_SECRET_RT
     const expiresIn = '20d'
-    const refreshToken = this.createJWT({ userId, deviceId }, expiresIn, secret)
+    const refreshToken = this.createJWT({userId, deviceId}, expiresIn, secret)
     const lastActiveDate = new Date()
-    const expirationDate = add(lastActiveDate, { days: 20 }) // seconds
-    return { deviceId, refreshToken, lastActiveDate, expirationDate, userId }
+    const expirationDate = add(lastActiveDate, {days: 20}) // seconds
+    return {deviceId, refreshToken, lastActiveDate, expirationDate, userId}
   },
 
-  async getDataByRefreshToken (token: string) {
+  async getDataByRefreshToken(token: string) {
     const secret = settings.JWT_SECRET_RT
     return await this.getUserIdByToken(token, secret)
   },
 
-  async getDataByAccessTokenData (token: string) {
+  async getDataByAccessTokenData(token: string) {
     const secret = settings.JWT_SECRET_AT
     return await this.getUserIdByToken(token, secret)
   },
 
-  async getUserIdByAccessToken (token: string) {
+  async getUserIdByAccessToken(token: string) {
     const secret = settings.JWT_SECRET_AT
     return await this.getUserIdByToken(token, secret)
   },
 
-  async getUserIdByToken (token: string, secret = settings.JWT_SECRET) {
+  async getUserIdByToken(token: string, secret = settings.JWT_SECRET) {
     try {
       return jwt.verify(token, secret)
       // // @ts-ignore

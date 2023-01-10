@@ -3,7 +3,7 @@ import { requestsLogRepository } from '../03.repositories/requestsLog-repository
 export interface IRequestInfoLog {
   ip: string
   url: string
-  date: number
+  date: string
   method: string
   body: string
   params: string
