@@ -47,8 +47,8 @@ blogsRouter.post('/:blogId/posts', vCEPost, authValidationMiddleware, inputValid
       return res.send(404)
     }
 
-    const post = await postsService.createPost({...req.body, blogId: blog.name, blogName: blog.name})
-    
+    const post = await postsService.createPost({...req.body, blogId: blog.name, blogName: blog.name}, req.user.userId)
+
     if (post) {
       res.status(201).send(post)
     } else {

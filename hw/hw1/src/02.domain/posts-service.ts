@@ -135,9 +135,9 @@ export const postsService = {
     return await abstractRepository.getAllFromCollectionPaginated<IPost>(params, postsCollection, mapFnForPost(userId))
   },
 
-  async createPost(rawPost: IPostRaw) {
+  async createPost(rawPost: IPostRaw, userId: string) {
     const post = await postsRepository.create(rawPost)
-    return post && mapFnForPost('userId')(post)
+    return post && mapFnForPost(userId)(post)
   }
 }
 
