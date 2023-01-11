@@ -40,6 +40,7 @@ export const abstractRepository = {
 
   async getOne<T>(value: string, collection: any, mapFn: any = mapFnDef <T, T>, name = 'id'): Promise<T | null> {
     const item: T | null = await collection.findOne({ [name]: value }, { projection: { _id: 0 } })
+    console.log('const item = ', item)
     if (!item) return null
     return mapFn(item)
   },

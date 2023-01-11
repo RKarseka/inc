@@ -7,7 +7,7 @@ import { authMiddleware } from '../middlewares/auth-middleware'
 export const commentsRouter = Router({})
 
 commentsRouter.get('/:id', async (req: Request, res: Response) => {
-  const comment = await commentsService.getOneComment(req.params.id)
+  const comment = await commentsService.getOneComment(req.params.id, req.userId || '')
   if (comment != null) {
     res.send(comment)
   } else {

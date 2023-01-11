@@ -63,8 +63,9 @@ const mapFnForComment = (myId: string) => {
 }
 
 export const commentsService = {
-  async getOneComment(id: string): Promise<IComment | null> {
-    return await abstractRepository.getOne<IComment>(id, commentsCollection, mapFnForComment(''))
+  async getOneComment(id: string, userId:string): Promise<IComment | null> {
+    console.log('const userId = ', userId)
+    return await abstractRepository.getOne<IComment>(id, commentsCollection, mapFnForComment(userId))
   },
   async editOwnComment(id: string, content: ParsedQs, user: IUserMe) {
     const comment = await abstractRepository.getOne<IComment>(id, commentsCollection)
@@ -82,14 +83,14 @@ export const commentsService = {
     const result = await abstractRepository.deleteOne(id, commentsCollection)
     return result ? 204 : 404
   },
-  async createComment(postId: string, content: string, user: IUserMe) {
+  async createComment(postId: string, content: string, userId: string) {
     const post = await postsRepository.getOne(postId)
     if (post == null) {
       return 404
     }
-    const comment: IComment | undefined = await commentsRepository.createComment(postId, content, user)
+    const comment: IComment | undefined = await commentsRepository.createComment(postId, content, userId)
     if (comment) {
-      return mapFnForComment(user.id)(comment)
+      return mapFnForComment(userId)(comment)
     }
     return 400
   },

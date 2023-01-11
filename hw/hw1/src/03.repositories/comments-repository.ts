@@ -10,12 +10,12 @@ const mapIComment = ({id, title, shortDescription, content, blogId, blogName, cr
 })
 
 export const commentsRepository = {
-  async createComment(postId: string, content: string, user: IUserMe): Promise<IComment | undefined> {
+  async createComment(postId: string, content: string, userId: string): Promise<IComment | undefined> {
     const newComment = {
       id: new ObjectId() + '',
       content,
-      userId: user.id,
-      userLogin: user.login,
+      userId,
+      userLogin: 'userLogin',
       postId,
       createdAt: new Date().toISOString(),
       likes: [],
