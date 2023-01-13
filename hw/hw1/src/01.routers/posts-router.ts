@@ -21,7 +21,7 @@ postsRouter.post('/', vBlogID, vCEPost, authValidationMiddleware, inputValidatio
       return res.send(404)
     }
 
-    const post = await postsService.createPost({...req.body, blogId: blog.name, blogName: blog.name}, req.user.userId)
+    const post = await postsService.createPost({...req.body, blogId: blog.name, blogName: blog.name})
     if (post) {
       res.status(201).send(post)
     } else {
