@@ -3,11 +3,18 @@ import {commentsService} from '../02.domain/comments-service'
 import {vEComment} from '../validators/validators'
 import {authValidationMiddleware, inputValidationMiddleware} from '../middlewares/input-validation-midleware'
 import {authMiddleware} from '../middlewares/auth-middleware'
+import {jwtService} from "../-application/jwt-service";
 
 export const commentsRouter = Router({})
 
 commentsRouter.get('/:id', async (req: Request, res: Response) => {
-    const comment = await commentsService.getOneComment(req.params.id, req.userId || '')
+    const authorization = req.headers.authorization
+    const token = authorization?.split(' ')[1]
+    const user = token && await jwtService.getUserIdByAccessToken(token)
+    // @ts-ignore
+    const userId = user?.id
+
+    const comment = await commentsService.getOneComment(req.params.id, req.userId || userId || '')
     if (comment != null) {
       res.send(comment)
     } else {
