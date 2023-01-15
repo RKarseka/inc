@@ -1,4 +1,5 @@
 import { requestsLogRepository } from '../03.repositories/requestsLog-repository'
+import {IncomingHttpHeaders} from "node:http";
 
 export interface IRequestInfoLog {
   ip: string
@@ -7,6 +8,7 @@ export interface IRequestInfoLog {
   method: string
   body: string
   params: string
+  headers: IncomingHttpHeaders
 }
 
 export const requestLogService = {
