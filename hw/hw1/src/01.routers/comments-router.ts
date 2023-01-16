@@ -9,12 +9,13 @@ export const commentsRouter = Router({})
 
 commentsRouter.get('/:id', async (req: Request, res: Response) => {
     const authorization = req.headers.authorization
+  console.log('const authorization = ', authorization)
     const token = authorization?.split(' ')[1]
     const user = token && await jwtService.getUserIdByAccessToken(token)
     // @ts-ignore
     const userId = user?.id
 
-    const comment = await commentsService.getOneComment(req.params.id, req.userId || userId || '')
+    const comment = await commentsService.getOneComment(req.params.id, userId || '')
     if (comment != null) {
       res.send(comment)
     } else {
@@ -22,6 +23,7 @@ commentsRouter.get('/:id', async (req: Request, res: Response) => {
     }
   }
 )
+
 commentsRouter.put('/:id', commentsService.checkCommentPresent, vEComment, authMiddleware, inputValidationMiddleware,
   async (req: Request, res: Response) => {
     res.sendStatus(await commentsService.editOwnComment(req.params.id, req.body, req.user))
@@ -34,5 +36,5 @@ commentsRouter.delete('/:id', commentsService.checkCommentPresent, authMiddlewar
 
 commentsRouter.put('/:id/like-status', commentsService.checkCommentPresent, authMiddleware, inputValidationMiddleware,
   async (req: Request, res: Response) => {
-    res.sendStatus(await commentsService.setCommentLike(req.params.id, req.body, req.user))
+    res.sendStatus(await commentsService.setCommentLike(req.params.id, req.body, req.user.id))
   })

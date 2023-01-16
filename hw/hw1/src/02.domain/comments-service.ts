@@ -63,7 +63,7 @@ const mapFnForComment = (myId: string) => {
 }
 
 export const commentsService = {
-  async getOneComment(id: string, userId:string): Promise<IComment | null> {
+  async getOneComment(id: string, userId: string): Promise<IComment | null> {
     console.log('const userId = ', userId)
     return await abstractRepository.getOne<IComment>(id, commentsCollection, mapFnForComment(userId))
   },
@@ -111,14 +111,14 @@ export const commentsService = {
     }
   },
 
-  async setCommentLike(id: string, body: ParsedQs, user: IUserMe) {
+  async setCommentLike(id: string, body: ParsedQs, userId: string) {
     const likeStatus = body.likeStatus as TLikeStatus
     const comment = await abstractRepository.getOne<IComment>(id, commentsCollection)
 
     if (!comment) return 404
 
-    if (likeStatus === 'Like' && comment.likes.includes(user.id)) return 204
-    if (likeStatus === 'Dislike' && comment.dislikes.includes(user.id)) return 204
+    if (likeStatus === 'Like' && comment.likes.includes(userId)) return 204
+    if (likeStatus === 'Dislike' && comment.dislikes.includes(userId)) return 204
 
     if (!comment.likes) comment.likes = []
     if (!comment.dislikes) comment.dislikes = []
@@ -127,11 +127,11 @@ export const commentsService = {
     comment.likes = comment.likes.filter(i => i !== id)
 
     if (likeStatus === 'Like') {
-      comment.likes.push(user.id)
+      comment.likes.push(userId)
     }
 
     if (likeStatus === 'Dislike') {
-      comment.dislikes.push(user.id)
+      comment.dislikes.push(userId)
     }
 
     const result = await abstractRepository.updateOne(id, comment, commentsCollection)
