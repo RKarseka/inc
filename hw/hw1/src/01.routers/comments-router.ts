@@ -15,7 +15,7 @@ commentsRouter.get('/:id', async (req: Request, res: Response) => {
     // @ts-ignore
     const userId = user?.id
 
-    const comment = await commentsService.getOneComment(req.params.id, userId || '')
+    const comment = await commentsService.getOneComment(req.params.id, '65bf9d3bac5aed0b8f1a08d5')
     if (comment != null) {
       res.send(comment)
     } else {

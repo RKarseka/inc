@@ -50,7 +50,7 @@ postsRouter.get('/:id/comments', async (req: Request, res: Response) => {
   }
 })
 postsRouter.post('/:id/comments', vCEComment, authMiddleware, inputValidationMiddleware, async (req: Request, res: Response) => {
-  const comment = await commentsService.createComment(req.params.id, req.body.content, req.userId || '')
+  const comment = await commentsService.createComment(req.params.id, req.body.content, req.user.id )
 
   if (typeof comment === 'object') {
     res.status(201).send({ ...comment })
