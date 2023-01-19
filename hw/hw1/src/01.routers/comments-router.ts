@@ -7,15 +7,9 @@ import {jwtService} from "../-application/jwt-service";
 
 export const commentsRouter = Router({})
 
-commentsRouter.get('/:id', async (req: Request, res: Response) => {
-    const authorization = req.headers.authorization
-  console.log('const authorization = ', authorization)
-    const token = authorization?.split(' ')[1]
-    const user = token && await jwtService.getUserIdByAccessToken(token)
-    // @ts-ignore
-    const userId = user?.id
+commentsRouter.get('/:id', authMiddleware, async (req: Request, res: Response) => {
 
-    const comment = await commentsService.getOneComment(req.params.id, userId)
+    const comment = await commentsService.getOneComment(req.params.id, req.user.userId)
     if (comment != null) {
       res.send(comment)
     } else {

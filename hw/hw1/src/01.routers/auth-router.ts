@@ -45,7 +45,7 @@ authRouter.post('/refresh-token', async (req: Request, res: Response) => {
   res.send({accessToken})
 })
 
-authRouter.post('/registration',  vCUser, inputValidationMiddleware, async (req: Request, res: Response) => {
+authRouter.post('/registration', vCUser, inputValidationMiddleware, async (req: Request, res: Response) => {
   const usersEmail = await usersService.getUserByEmail(req.body.email)
   const usersLogin = await usersService.getUserByLogin(req.body.login)
   if (usersEmail || usersLogin) {
@@ -54,13 +54,13 @@ authRouter.post('/registration',  vCUser, inputValidationMiddleware, async (req:
     return
   }
   const newUser = await usersService.createUser(req.body)
-  const getUser = await usersService.getUserById(newUser.id)
+  const getUser = await usersService.getUserById(newUser.id) as IUserWithConfirmation
   const email = emailManager.makeRegistrationConfirmationEmail(req.body.email, getUser?.confirmationCode)
   await emailAdapter.sendEmail(email)
   res.sendStatus(204)
 })
 
-authRouter.post('/registration-confirmation',  vACode, inputValidationMiddleware, async (req: Request, res: Response) => {
+authRouter.post('/registration-confirmation', vACode, inputValidationMiddleware, async (req: Request, res: Response) => {
   const user = await usersService.getUserByCode<IUserWithConfirmation>(req.body.code)
   if ((user == null) || user.isConfirmed) {
     res.status(400).send(makeError('code'))
@@ -72,7 +72,7 @@ authRouter.post('/registration-confirmation',  vACode, inputValidationMiddleware
   res.sendStatus(editing ? 204 : 400)
 })
 
-authRouter.post('/registration-email-resending',  vCEmail, inputValidationMiddleware, async (req: Request, res: Response) => {
+authRouter.post('/registration-email-resending', vCEmail, inputValidationMiddleware, async (req: Request, res: Response) => {
   const user = await usersService.getUserByEmail<IUserWithConfirmation>(req.body.email)
   if ((user == null) || user.isConfirmed) {
     res.status(400).send(makeError('email'))
@@ -105,13 +105,13 @@ authRouter.post('/logout', async (req: Request, res: Response) => {
   logout ? res.sendStatus(204) : exitFn()
 })
 
-authRouter.post('/password-recovery',  vCEmail, inputValidationMiddleware, async (req: Request, res: Response) => {
+authRouter.post('/password-recovery', vCEmail, inputValidationMiddleware, async (req: Request, res: Response) => {
   await authService.sendRecoveryCode(req.body.email)
 
   res.sendStatus(204)
 })
 
-authRouter.post('/new-password',  vAPasswordRecovery, inputValidationMiddleware, async (req: Request, res: Response) => {
+authRouter.post('/new-password', vAPasswordRecovery, inputValidationMiddleware, async (req: Request, res: Response) => {
   const result = await authService.setNewPassword(req.body.recoveryCode, req.body.newPassword)
 
   if (!result) {

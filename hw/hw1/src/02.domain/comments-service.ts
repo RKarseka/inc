@@ -64,7 +64,6 @@ const mapFnForComment = (myId: string) => {
 
 export const commentsService = {
   async getOneComment(id: string, userId: string): Promise<IComment | null> {
-    console.log('const userId = ', userId)
     return await abstractRepository.getOne<IComment>(id, commentsCollection, mapFnForComment(userId))
   },
   async editOwnComment(id: string, content: ParsedQs, user: IUserMe) {
