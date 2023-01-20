@@ -17,7 +17,7 @@ export const checkAuthorization = async (req: Request): Promise<IUserShort> => {
     return emptyUser
   }
   const mapFn = ({id, login, email}: IUserMe): IUserShort => ({userId: id, login, email})
-  const foundUser= await usersService.getUserById(user.userId, mapFn)
+  const foundUser = await usersService.getUserById(user.userId, mapFn)
 
   if (!foundUser) {
     return emptyUser
@@ -38,7 +38,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
 }
 
 
-export const checkAuthorizationMiddleware= async (req: Request, res: Response, next: NextFunction) => {
+export const checkAuthorizationMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   req.user = await checkAuthorization(req)
   next()
 }
