@@ -1,7 +1,7 @@
 import {abstractRepository} from '../03.repositories/abstract-repository'
 import {commentsCollection} from '../03.repositories/db'
 import {ParsedQs} from 'qs'
-import {IUserMe} from './users-service'
+import {IUserMe, IUserShort} from './users-service'
 import {commentsRepository} from '../03.repositories/comments-repository'
 import {postsRepository} from '../03.repositories/posts-repository'
 import {ISearchFields, makeGetAllParams} from '../helpers/helpers'
@@ -82,14 +82,14 @@ export const commentsService = {
     const result = await abstractRepository.deleteOne(id, commentsCollection)
     return result ? 204 : 404
   },
-  async createComment(postId: string, content: string, userId: string) {
+  async createComment(postId: string, content: string, user: IUserShort) {
     const post = await postsRepository.getOne(postId)
     if (post == null) {
       return 404
     }
-    const comment: IComment | undefined = await commentsRepository.createComment(postId, content, userId)
+    const comment: IComment | undefined = await commentsRepository.createComment(postId, content, user)
     if (comment) {
-      return mapFnForComment(userId)(comment)
+      return mapFnForComment(user.userId)(comment)
     }
     return 400
   },

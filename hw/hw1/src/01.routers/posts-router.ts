@@ -1,11 +1,11 @@
-import { Request, Response, Router } from 'express'
-import { authValidationMiddleware, inputValidationMiddleware } from '../middlewares/input-validation-midleware'
-import { vBlogID, vCEComment, vCEPost } from '../validators/validators'
-import { blogsRepository } from '../03.repositories/blogs-repository'
-import { postsRepository } from '../03.repositories/posts-repository'
-import { postsService } from '../02.domain/posts-service'
-import { authMiddleware } from '../middlewares/auth-middleware'
-import { commentsService } from '../02.domain/comments-service'
+import {Request, Response, Router} from 'express'
+import {authValidationMiddleware, inputValidationMiddleware} from '../middlewares/input-validation-midleware'
+import {vBlogID, vCEComment, vCEPost} from '../validators/validators'
+import {blogsRepository} from '../03.repositories/blogs-repository'
+import {postsRepository} from '../03.repositories/posts-repository'
+import {postsService} from '../02.domain/posts-service'
+import {authMiddleware} from '../middlewares/auth-middleware'
+import {commentsService} from '../02.domain/comments-service'
 
 export const postsRouter = Router({})
 
@@ -50,10 +50,10 @@ postsRouter.get('/:id/comments', async (req: Request, res: Response) => {
   }
 })
 postsRouter.post('/:id/comments', vCEComment, authMiddleware, inputValidationMiddleware, async (req: Request, res: Response) => {
-  const comment = await commentsService.createComment(req.params.id, req.body.content, req.user.id )
+  const comment = await commentsService.createComment(req.params.id, req.body.content, req.user)
 
   if (typeof comment === 'object') {
-    res.status(201).send({ ...comment })
+    res.status(201).send({...comment})
   } else {
     res.sendStatus(comment)
   }

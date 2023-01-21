@@ -1,5 +1,5 @@
 import {ObjectId} from 'mongodb'
-import {IUserMe} from '../02.domain/users-service'
+import {IUserMe, IUserShort} from '../02.domain/users-service'
 import {commentsCollection} from './db'
 import {IPost} from '../02.domain/posts-service'
 import {abstractRepository} from './abstract-repository'
@@ -10,12 +10,15 @@ const mapIComment = ({id, title, shortDescription, content, blogId, blogName, cr
 })
 
 export const commentsRepository = {
-  async createComment(postId: string, content: string, userId: string): Promise<IComment | undefined> {
+  async createComment(postId: string, content: string, {
+    userId,
+    login: userLogin
+  }: IUserShort): Promise<IComment | undefined> {
     const newComment = {
       id: new ObjectId() + '',
       content,
       userId,
-      userLogin: 'userLogin',
+      userLogin,
       postId,
       createdAt: new Date().toISOString(),
       likes: [],
