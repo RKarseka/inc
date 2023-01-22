@@ -12,13 +12,12 @@ export const checkAuthorization = async (req: Request): Promise<IUserShort> => {
 
   const token = authorization.split(' ')[1]
   const user = await jwtService.getUserIdByAccessToken(token) as { userId: string, login: string, email: string }
-
   if (!user) {
     return emptyUser
   }
   const mapFn = ({id, login, email}: IUserMe): IUserShort => ({userId: id, login, email})
   const foundUser = await usersService.getUserById(user.userId, mapFn)
-
+  console.log('const foundUser = ', foundUser)
   if (!foundUser) {
     return emptyUser
 
