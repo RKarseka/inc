@@ -111,6 +111,7 @@ export const commentsService = {
   },
 
   async setCommentLike(id: string, body: ParsedQs, userId: string) {
+    console.log('const userId = ', userId)
     const likeStatus = body.likeStatus as TLikeStatus
     const comment = await abstractRepository.getOne<IComment>(id, commentsCollection)
 

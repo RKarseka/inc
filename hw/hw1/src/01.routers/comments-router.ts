@@ -30,5 +30,5 @@ commentsRouter.delete('/:id', commentsService.checkCommentPresent, authMiddlewar
 
 commentsRouter.put('/:id/like-status', commentsService.checkCommentPresent, authMiddleware, inputValidationMiddleware,
   async (req: Request, res: Response) => {
-    res.sendStatus(await commentsService.setCommentLike(req.params.id, req.body, req.user.id))
+    res.sendStatus(await commentsService.setCommentLike(req.params.id, req.body, req.user.userId))
   })
