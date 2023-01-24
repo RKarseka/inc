@@ -123,8 +123,8 @@ export const commentsService = {
     if (!comment.likes) comment.likes = []
     if (!comment.dislikes) comment.dislikes = []
 
-    comment.dislikes = comment.dislikes.filter(i => i !== id)
-    comment.likes = comment.likes.filter(i => i !== id)
+    comment.dislikes = comment.dislikes.filter(i => i !== userId)
+    comment.likes = comment.likes.filter(i => i !== userId)
 
     if (likeStatus === 'Like') {
       comment.likes.push(userId)
