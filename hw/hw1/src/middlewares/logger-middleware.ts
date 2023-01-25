@@ -19,7 +19,7 @@ export const loggerMW = async (req: Request, res: Response, next: NextFunction) 
 
   hotLog[ip][url][method] = hotLog[ip][url][method].filter((reqDate: number) => date2 - reqDate <= 10000)
 
-  if (hotLog[ip][url][method].length > 5) {
+  if (hotLog[ip][url][method].length > 7) {
     res.sendStatus(429)
     return
   }
