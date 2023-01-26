@@ -18,10 +18,11 @@ export const checkAuthorization = async (req: Request): Promise<IUserShort> => {
   const mapFn = ({id, login, email}: IUserMe): IUserShort => ({userId: id, login, email})
   const foundUser = await usersService.getUserById(user.userId, mapFn)
   console.log('const foundUser = ', foundUser)
+
   if (!foundUser) {
     return emptyUser
-
   }
+
   return foundUser
 }
 

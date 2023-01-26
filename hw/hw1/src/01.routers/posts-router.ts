@@ -4,7 +4,7 @@ import {vBlogID, vCEComment, vCEPost} from '../validators/validators'
 import {blogsRepository} from '../03.repositories/blogs-repository'
 import {postsRepository} from '../03.repositories/posts-repository'
 import {postsService} from '../02.domain/posts-service'
-import {authMiddleware} from '../middlewares/auth-middleware'
+import {authMiddleware, checkAuthorizationMiddleware} from '../middlewares/auth-middleware'
 import {commentsService} from '../02.domain/comments-service'
 
 export const postsRouter = Router({})
@@ -41,7 +41,7 @@ postsRouter.delete('/:id', vCEPost, authValidationMiddleware,
   async (req: Request, res: Response) => {
     res.send(await postsRepository.deleteOne(req.params.id) ? 204 : 404)
   })
-postsRouter.get('/:id/comments', async (req: Request, res: Response) => {
+postsRouter.get('/:id/comments', checkAuthorizationMiddleware, async (req: Request, res: Response) => {
   const comments = await commentsService.getComments(req.query, req.params.id)
   if (comments != null) {
     res.send(comments)
