@@ -42,7 +42,7 @@ postsRouter.delete('/:id', vCEPost, authValidationMiddleware,
     res.send(await postsRepository.deleteOne(req.params.id) ? 204 : 404)
   })
 postsRouter.get('/:id/comments', checkAuthorizationMiddleware, async (req: Request, res: Response) => {
-  const comments = await commentsService.getComments(req.query, req.params.id)
+  const comments = await commentsService.getComments(req.query, req.params.id, req.user.userId)
   if (comments != null) {
     res.send(comments)
   } else {

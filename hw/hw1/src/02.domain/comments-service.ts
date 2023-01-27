@@ -93,13 +93,13 @@ export const commentsService = {
     }
     return 400
   },
-  async getComments(query: ParsedQs, postId: string) {
+  async getComments(query: ParsedQs, postId: string, userId: string) {
     const post = await postsRepository.getOne(postId)
     if (post == null) return
 
     const searchFields: Array<ISearchFields<IComment>> = [{name: 'postId', query: 'postId'}]
     const params = makeGetAllParams({...query, postId}, searchFields)
-    return await abstractRepository.getAllFromCollectionPaginated<IComment>(params, commentsCollection, mapFnForComment(''))
+    return await abstractRepository.getAllFromCollectionPaginated<IComment>(params, commentsCollection, mapFnForComment(userId))
   },
   async checkCommentPresent(req: Request, res: Response, next: NextFunction) {
     const comment = await abstractRepository.getOne<IComment>(req.params.id, commentsCollection)
