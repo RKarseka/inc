@@ -17,7 +17,8 @@ export const vEComment = checkSchema({
 export const vLikeComment = checkSchema({
   likeStatus: {
     trim: {},
-    isIn: {options: [ 'None', 'Like', 'Dislike' ]}
+    isIn: {options: [ 'None', 'Like', 'Dislike' ]},
+    notEmpty: true
   }
 })
 export const vCEBlog = checkSchema({
