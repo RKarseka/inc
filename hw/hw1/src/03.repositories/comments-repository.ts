@@ -5,9 +5,6 @@ import {IPost} from '../02.domain/posts-service'
 import {abstractRepository} from './abstract-repository'
 import {IComment} from "../02.domain/comments-service";
 
-const mapIComment = ({id, title, shortDescription, content, blogId, blogName, createdAt}: IPost): IPost => ({
-  id, title, shortDescription, content, blogId, blogName, createdAt
-})
 
 export const commentsRepository = {
   async createComment(postId: string, content: string, {

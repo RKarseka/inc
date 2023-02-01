@@ -7,7 +7,7 @@ import {postsRepository} from '../03.repositories/posts-repository'
 import {ISearchFields, makeGetAllParams} from '../helpers/helpers'
 import {NextFunction, Request, Response} from 'express'
 
-type TLikeStatus = 'Like' | 'Dislike' | 'None'
+export type TLikeStatus = 'Like' | 'Dislike' | 'None'
 
 export interface ICommentBase {
   id: string
@@ -111,7 +111,6 @@ export const commentsService = {
   },
 
   async setCommentLike(id: string, body: ParsedQs, userId: string) {
-    console.log('const userId = ', userId)
     const likeStatus = body.likeStatus as TLikeStatus
     const comment = await abstractRepository.getOne<IComment>(id, commentsCollection)
 

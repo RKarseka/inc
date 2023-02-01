@@ -37,6 +37,11 @@ postsRouter.put('/:id', vBlogID, vCEPost, authValidationMiddleware, inputValidat
     const newBlog = await postsRepository.editOne(req.params.id, req.body)
     res.send(newBlog ? 204 : 404)
   })
+
+postsRouter.put('/:id/like-status',  authValidationMiddleware, inputValidationMiddleware,
+  async (req: Request, res: Response) => {
+    res.sendStatus(await postsService.setPostLike(req.params.id, req.body, req.user.userId))
+  })
 postsRouter.delete('/:id', vCEPost, authValidationMiddleware,
   async (req: Request, res: Response) => {
     res.send(await postsRepository.deleteOne(req.params.id) ? 204 : 404)

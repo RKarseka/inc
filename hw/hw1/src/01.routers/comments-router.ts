@@ -1,9 +1,8 @@
 import {Request, Response, Router} from 'express'
 import {commentsService} from '../02.domain/comments-service'
 import {vEComment, vLikeComment} from '../validators/validators'
-import {authValidationMiddleware, inputValidationMiddleware} from '../middlewares/input-validation-midleware'
+import {inputValidationMiddleware} from '../middlewares/input-validation-midleware'
 import {authMiddleware, checkAuthorizationMiddleware} from '../middlewares/auth-middleware'
-import {jwtService} from "../-application/jwt-service";
 
 export const commentsRouter = Router({})
 

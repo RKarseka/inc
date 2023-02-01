@@ -1,9 +1,9 @@
-import { Request, Response, Router } from 'express'
-import { vCEBlog, vCEPost } from '../validators/validators'
-import { authValidationMiddleware, inputValidationMiddleware } from '../middlewares/input-validation-midleware'
-import { blogsService } from '../02.domain/blogs-service'
-import { blogsRepository } from '../03.repositories/blogs-repository'
-import { postsRepository } from '../03.repositories/posts-repository'
+import {Request, Response, Router} from 'express'
+import {vCEBlog, vCEPost} from '../validators/validators'
+import {authValidationMiddleware, inputValidationMiddleware} from '../middlewares/input-validation-midleware'
+import {blogsService} from '../02.domain/blogs-service'
+import {blogsRepository} from '../03.repositories/blogs-repository'
+import {postsRepository} from '../03.repositories/posts-repository'
 
 export const blogsRouter = Router({})
 blogsRouter.get('/', async (req: Request, res: Response) => {
@@ -46,8 +46,6 @@ blogsRouter.post('/:blogId/posts', vCEPost, authValidationMiddleware, inputValid
       return res.send(404)
     }
     res.status(201).send(await postsRepository.create({
-      ...req.body,
-      blogId: req.params.blogId,
-      blogName: blog.name
+      ...req.body, blogId: req.params.blogId, blogName: blog.name
     }))
   })
