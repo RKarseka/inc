@@ -75,9 +75,7 @@ const mapFnForPost = (userId: string) => {
       isMyLike(userId, post.dislikes) && 'Dislike' || 'None'
 
 
-    const newestLikes = [...likes.slice(-3), ...dislikes.slice(-3)]
-      .sort((d1, d2) => compareAsc(new Date(d1.addedAt), new Date(d2.addedAt)))
-      .reverse().slice(0, 3)
+    const newestLikes = likes.slice(-3).reverse()
 
     return {
       id,
