@@ -88,7 +88,7 @@ const mapFnForPost = (userId: string) => {
         likesCount,
         dislikesCount,
         myStatus,
-        newestLikes: []
+        newestLikes
       }
     }
   }
