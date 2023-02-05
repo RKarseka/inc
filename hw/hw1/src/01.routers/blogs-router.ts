@@ -5,6 +5,7 @@ import {blogsService} from '../02.domain/blogs-service'
 import {blogsRepository} from '../03.repositories/blogs-repository'
 import {postsRepository} from '../03.repositories/posts-repository'
 import {postsService} from "../02.domain/posts-service";
+import {checkAuthorizationMiddleware} from "../middlewares/auth-middleware";
 
 export const blogsRouter = Router({})
 blogsRouter.get('/', async (req: Request, res: Response) => {
@@ -35,10 +36,10 @@ blogsRouter.delete('/:id', vCEBlog, authValidationMiddleware,
   async (req: Request, res: Response) => {
     res.send(await blogsRepository.deleteOne(req.params.id) ? 204 : 404)
   })
-blogsRouter.get('/:blogId/posts',
+blogsRouter.get('/:blogId/posts', checkAuthorizationMiddleware,
   async (req: Request, res: Response) => {
-    const posts = await blogsService.getPostsByBlog(req.query, req.params.blogId)
-    res.send((posts != null) || 404)
+    const posts = await blogsService.getPostsByBlog(req.query, req.params.blogId, req.user.userId)
+    res.send(posts || 404)
   })
 blogsRouter.post('/:blogId/posts', vCEPost, authValidationMiddleware, inputValidationMiddleware,
   async (req: Request, res: Response) => {

@@ -1,6 +1,6 @@
 import {Request, Response, Router} from 'express'
 import {authValidationMiddleware, inputValidationMiddleware} from '../middlewares/input-validation-midleware'
-import {vAuth, vBlogID, vCEComment, vCEPost} from '../validators/validators'
+import {vAuth, vBlogID, vCEComment, vCEPost, vLikeComment} from '../validators/validators'
 import {blogsRepository} from '../03.repositories/blogs-repository'
 import {postsRepository} from '../03.repositories/posts-repository'
 import {postsService} from '../02.domain/posts-service'
@@ -41,7 +41,7 @@ postsRouter.put('/:id', vBlogID, vCEPost, vAuth, inputValidationMiddleware,
     res.send(newBlog ? 204 : 404)
   })
 
-postsRouter.put('/:id/like-status', authMiddleware, inputValidationMiddleware,
+postsRouter.put('/:id/like-status', vLikeComment, authMiddleware, inputValidationMiddleware,
   async (req: Request, res: Response) => {
     res.sendStatus(await postsService.setPostLike(req.params.id, req.body, req.user))
   })

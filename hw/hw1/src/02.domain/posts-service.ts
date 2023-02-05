@@ -65,7 +65,7 @@ export interface IPostFormatted {
 
 const isMyLike = (userId: string, posts: TLike[]) => posts.some(like => like.userId === userId)
 
-const mapFnForPost = (userId: string) => {
+export const mapFnForPost = (userId: string) => {
   return (post: IPost): IPostFormatted => {
     const {id, title, shortDescription, content, blogId, blogName, createdAt, likes, dislikes} = post
     const likesCount = likes?.length || 0
